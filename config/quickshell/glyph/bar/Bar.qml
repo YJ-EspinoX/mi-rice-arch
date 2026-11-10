@@ -208,21 +208,21 @@ PanelWindow {
     }
     Component {
         id: btC
-        Icon {
+        Icon { font.pixelSize: 20; 
             text: Bluetooth.defaultAdapter?.enabled ? "\u{F00AF}" : "\u{F00B2}"
             color: Bluetooth.devices.values.some(d => d.connected) ? Theme.fg : Theme.grey
         }
     }
     Component {
         id: soundC
-        Icon {
+        Icon { font.pixelSize: 20; 
             text: Sys.muted ? "\u{F075F}" : "\u{F057E}"
             Notch { onNotch: d => Sys.setVol(Sys.vol + d * 0.05) }
         }
     }
     Component {
         id: notesC
-        Icon {
+        Icon { font.pixelSize: 20; 
             text: Theme.state.dnd ? "\u{F009B}" : "\u{F009A}"
             color: Notes.list.length ? Theme.fg : Theme.grey
         }
@@ -241,7 +241,7 @@ PanelWindow {
             property real phase: 0
             readonly property real pulse: charging ? 0.675 + 0.325 * Math.cos(phase * Math.PI / 1.1) : 1
             Timer { running: batc.charging; interval: 50; repeat: true; onTriggered: batc.phase = (batc.phase + 0.05) % 2.2; onRunningChanged: batc.phase = 0 }
-            Icon { visible: batc.ac; text: "\u{F140B}"; font.pixelSize: 14 }
+            Icon { visible: batc.ac; text: "\u{F140B}"; font.pixelSize: 18 }
             Rectangle {
                 width: root.vert ? 14 : 26
                 height: root.vert ? 26 : 14
@@ -292,11 +292,11 @@ PanelWindow {
     }
     Component {
         id: powerC
-        Icon {
-            text: "\u{F0425}"
+        Icon { font.pixelSize: 20; 
+            text: "\u{F0493}"
             color: pwr.hovered ? Theme.fg : Theme.grey
             HoverHandler { id: pwr; cursorShape: Qt.PointingHandCursor }
-            TapHandler { onTapped: root.powerClicked() }
+            TapHandler { onTapped: root.trayClicked() }
         }
     }
 

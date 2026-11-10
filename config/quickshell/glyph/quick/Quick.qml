@@ -67,13 +67,13 @@ PanelWindow {
         // и тут же открылась. Панель внутри зоны, а не соседом: HoverHandler кнопки (клетки режимов, строки Picker) гасит
         // наведение соседа под собой, а предка — нет
         Item {
-            anchors { right: parent.right; bottom: parent.bottom }
+            anchors { right: parent.right; top: parent.top; topMargin: 70 }
             width: panel.width + panel.anchors.rightMargin
             height: panel.height + 14
             HoverHandler { id: keep }
             Rectangle {
                 id: panel
-                anchors { right: parent.right; rightMargin: 14 - 24 * (1 - root.t); bottom: parent.bottom; bottomMargin: 14 }
+                anchors { horizontalCenter: parent.horizontalCenter; top: parent.top; topMargin: 14 + 20 * (1 - root.t) }
                 width: 470
                 height: col.height + 44
                 opacity: root.t
