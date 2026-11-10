@@ -23,7 +23,7 @@ PanelWindow {
     signal powerClicked
     signal clockClicked
 
-    readonly property bool vert: Theme.state.barAt !== "top" // всё, кроме top (и неизвестное), — слева
+    readonly property bool vert: false // barra fija siempre en la parte superior (top)
     readonly property int thick: 60 // grosor sobre el lienzo 1920×1080 (antes 78): barra más delgada
     anchors { left: true; right: !vert; top: true; bottom: vert }
     implicitWidth: Math.ceil(thick * Theme.s)  // сбоку

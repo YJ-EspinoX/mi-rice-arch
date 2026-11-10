@@ -26,3 +26,6 @@ hl.env("_JAVA_AWT_WM_NONREPARENTING", "1")
 hl.env("LANG", "es_HN.UTF-8")
 hl.env("LC_MESSAGES", "es_HN.UTF-8")
 hl.env("LANGUAGE", "es_HN:es")
+
+-- Zona horaria: Honduras (America/Tegucigalpa, UTC-6)
+hl.env("TZ", "America/Tegucigalpa")

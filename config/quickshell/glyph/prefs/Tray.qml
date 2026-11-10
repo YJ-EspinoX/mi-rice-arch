@@ -18,6 +18,12 @@ Grid {
     property var widths: null
     property int cur: 0
     signal toggled(string key)
+    readonly property var widgetNames: ({
+        weather: "clima", calendar: "calendario", cpu: "procesador", ram: "memoria", gpu: "gpu", disk: "disco",
+        battery: "batería", buds: "auriculares", player: "reproductor", system: "sistema", cat: "gato", cava: "cava",
+        clock: "reloj", perf: "rendimiento", net: "red", media: "medios", layout: "distribución", wifi: "wifi",
+        bluetooth: "bluetooth", sound: "sonido", notes: "notas", mode: "modo", power: "energía"
+    })
 
     activeFocusOnTab: true
     Keys.onPressed: e => {
@@ -63,7 +69,7 @@ Grid {
                     }
                 }
             }
-            Lb { anchors.horizontalCenter: parent.horizontalCenter; text: it.modelData; px: 10; color: it.on ? Theme.fg : Theme.grey }
+            Lb { anchors.horizontalCenter: parent.horizontalCenter; text: root.widgetNames[it.modelData] ?? it.modelData; px: 10; color: it.on ? Theme.fg : Theme.grey }
             Row {
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 4

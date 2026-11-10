@@ -59,9 +59,10 @@ PanelWindow {
         Row {
             x: 182
             y: 150
-            Num { text: Theme.hh(clock.date); font.pixelSize: 300 }
+            Num { text: String(clock.date.getHours() % 12 || 12); font.pixelSize: 300 }
             Num { text: ":"; font.pixelSize: 300; opacity: Theme.state.blink && root.dim ? 0.2 : 1 }
             Num { text: Qt.formatTime(clock.date, "mm"); font.pixelSize: 300 }
+            Num { text: clock.date.getHours() >= 12 ? "PM" : "AM"; font.pixelSize: 130 }
         }
         Lb {
             x: 190

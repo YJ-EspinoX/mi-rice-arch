@@ -12,7 +12,7 @@ Row {
     property bool live: true // the meters capture only while the page is on screen
     readonly property var outs: devs(true)
     readonly property var ins: devs(false)
-    readonly property string caption: `audio · pipewire · ${outs.length} out · ${ins.length} in`
+    readonly property string caption: `audio · pipewire · ${outs.length} salida · ${ins.length} entrada`
 
     // hardware only (no app streams), grouped by card: "SSL 2+" + "Line Outputs 1/L + 2/R".
     // A duplex node (a virtual mic-and-speaker) is a sink and a source at once — it goes in both lists
@@ -32,8 +32,8 @@ Row {
 
     spacing: 70
 
-    Side { out: true; label: "output"; node: Sys.sink; list: root.outs } // Sys tracks both
-    Side { out: false; label: "input"; node: Sys.mic; list: root.ins }
+    Side { out: true; label: "salida"; node: Sys.sink; list: root.outs } // Sys tracks both
+    Side { out: false; label: "entrada"; node: Sys.mic; list: root.ins }
 
     component Side: Column {
         id: side
@@ -83,7 +83,7 @@ Row {
                 Toggle {
                     enabled: !!side.node?.audio
                     width: 200
-                    text: "mute"
+                    text: "silenciar"
                     on: side.node?.audio?.muted ?? false
                     onFlip: side.node.audio.muted = !side.node.audio.muted
                 }
@@ -95,7 +95,7 @@ Row {
                         Seg { n: 10; spacing: 7; width: 163; height: 10; f: side.lv * 1.2 }
                         Seg { n: 2; spacing: 7; width: 27; height: 10; f: side.lv * 6 - 5; on: Theme.red }
                     }
-                    Lb { text: side.node?.audio?.muted ? "level · muted" : "level"; px: 10 }
+                    Lb { text: side.node?.audio?.muted ? "nivel · silenciado" : "nivel"; px: 10 }
                 }
             }
         }
@@ -117,7 +117,7 @@ Row {
                 e.accepted = true;
             }
 
-            Lb { visible: !side.list.length; anchors.centerIn: parent; text: "no devices"; px: 10 }
+            Lb { visible: !side.list.length; anchors.centerIn: parent; text: "sin dispositivos"; px: 10 }
             Flickable {
                 id: rows
                 anchors { fill: parent; topMargin: 6; bottomMargin: 6 }

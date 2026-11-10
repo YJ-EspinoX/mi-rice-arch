@@ -20,10 +20,10 @@ PanelWindow {
 
     property int sel: 0
     signal wallRequested // обои — свой экран (wall/Walls), его открывает shell.qml
-    readonly property var sections: ["HOME", "DECK", "BAR", "LOOK", "STYLE", "WINDOWS", "DISPLAY", "AUDIO", "POWER", "INPUT", "IDLE", "SHELL"]
-    readonly property string moves: "shift ←→ move · ↵ swap · del drop · drag"
-    readonly property string rings: "drag round the rings · scroll"
-    readonly property var hints: [moves, moves, moves, "", "hover to preview · ↵ or click sets it", rings, "drag a screen to move it · " + rings, "click or ←→ a device", "↵ or click a mode", rings, "drag the marks", ""]
+    readonly property var sections: ["INICIO", "PANEL", "BARRA", "APARIENCIA", "ESTILO", "VENTANAS", "PANTALLA", "SONIDO", "ENERGÍA", "ENTRADA", "INACTIVIDAD", "SHELL"]
+    readonly property string moves: "shift ←→ mover · ↵ intercambiar · del soltar · arrastrar"
+    readonly property string rings: "arrastrar por los anillos · desplazar"
+    readonly property var hints: [moves, moves, moves, "", "pasar para previsualizar · ↵ o clic lo establece", rings, "arrastrar una pantalla para moverla · " + rings, "clic o ←→ un dispositivo", "↵ o clic un modo", rings, "arrastrar las marcas", ""]
     readonly property var r: Rules.store
 
     // глифы видов дома, секций deck и трея бара
@@ -33,6 +33,13 @@ PanelWindow {
         clock: "\u{F0150}", perf: "\u{F04C5}", net: "\u{F05A9}", media: "\u{F075A}",
         layout: "\u{F030C}", wifi: "\u{F05A9}", bluetooth: "\u{F00AF}", sound: "\u{F057E}", notes: "\u{F009A}",
         mode: "\u{F04C5}", power: "\u{F0425}"
+    })
+    // nombre en español de cada id de widget, para mostrar en los trays y tarjetas
+    readonly property var widgetNames: ({
+        weather: "clima", calendar: "calendario", cpu: "procesador", ram: "memoria", gpu: "gpu", disk: "disco",
+        battery: "batería", buds: "auriculares", player: "reproductor", system: "sistema", cat: "gato", cava: "cava",
+        clock: "reloj", perf: "rendimiento", net: "red", media: "medios", layout: "distribución", wifi: "wifi",
+        bluetooth: "bluetooth", sound: "sonido", notes: "notas", mode: "modo", power: "energía"
     })
     // круглые виджеты дома, остальные — квадрат 40. ponytail: ram/gpu/disk/battery — догадка (кольца); решит Home — поправить
     readonly property var rounds: ["weather", "cpu", "ram", "gpu", "disk", "battery", "buds", "cava"]
@@ -127,7 +134,7 @@ PanelWindow {
     }
 
     SystemClock { id: clock; enabled: root.visible; precision: SystemClock.Minutes }
-    readonly property string hello: { const h = clock.date.getHours(); return h < 5 ? "Good night" : h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening"; }
+    readonly property string hello: { const h = clock.date.getHours(); return h < 5 ? "Buenas noches" : h < 12 ? "Buenos días" : h < 18 ? "Buenas tardes" : "Buenas noches"; }
     readonly property string who: (Theme.state.name || Quickshell.env("USER")).replace(/&/g, "&amp;").replace(/</g, "&lt;")
 
     // имя и подпись текущего шелла — из его rice.json (тот же, что рисует приложение Rice)
@@ -208,10 +215,10 @@ PanelWindow {
             x: 150
             anchors { bottom: parent.bottom; bottomMargin: 70 }
             spacing: 34
-            Lb { text: "↑↓ section" }
-            Lb { text: "tab · ←→ change" }
+            Lb { text: "↑↓ sección" }
+            Lb { text: "tab · ←→ cambiar" }
             Lb { visible: !!text; text: root.hints[root.sel] }
-            Lb { text: "esc close"; TapHandler { onTapped: root.close() } }
+            Lb { text: "esc cerrar"; TapHandler { onTapped: root.close() } }
         }
 
         // ---- HOME: дом в масштабе 168/220 — те же виды, порядок и укладка. Клик — выбрать, ещё клик или ↵ — следующий вид,
@@ -220,8 +227,8 @@ PanelWindow {
         Page {
             id: home
             k: 0
-            caption: `home${root.multi ? ` · ${root.mon.toLowerCase()}${Theme.scr(root.mon, "home") ? "" : " · hidden there, display shows it"}` : ""}`
-                + ` · bento 3 × 3 · ${used} of 9 cells`
+            caption: `inicio${root.multi ? ` · ${root.mon.toLowerCase()}${Theme.scr(root.mon, "home") ? "" : " · oculto allí, pantalla lo muestra"}` : ""}`
+                + ` · cuadrícula 3 × 3 · ${used} de 9 celdas`
             readonly property var cells: root.pack(root.list("widgets"))
             readonly property var placed: cells.filter(c => c.fits)
             readonly property var off: cells.filter(c => !c.fits)
@@ -242,7 +249,7 @@ PanelWindow {
                 cur = root.move("widgets", i, hit ? hit.i : i < n ? n - 1 : n);
             }
 
-            Pick { visible: root.multi; label: "screen"; opts: root.names.map(n => n.toLowerCase()); cur: root.names.indexOf(root.mon); onPicked: i => root.pickMon = root.names[i] }
+            Pick { visible: root.multi; label: "pantalla"; opts: root.names.map(n => n.toLowerCase()); cur: root.names.indexOf(root.mon); onPicked: i => root.pickMon = root.names[i] }
 
             Row {
                 spacing: 60
@@ -278,7 +285,7 @@ PanelWindow {
                 Column {
                     width: 404
                     spacing: 12
-                    Lb { text: "cells" }
+                    Lb { text: "celdas" }
                     Row {
                         spacing: 10
                         Num { id: usedN; text: home.used; font.pixelSize: 150 }
@@ -287,7 +294,7 @@ PanelWindow {
                     Lb {
                         width: parent.width
                         elide: Text.ElideRight
-                        text: !home.cur_ ? "empty · ↵ adds one" : `${home.cur_.id} · ${home.cur_.span} cell${home.cur_.span > 1 ? "s" : ""}${home.cur_.fits ? "" : " · off grid"}`
+                        text: !home.cur_ ? "vacío · ↵ añade uno" : `${home.cur_.id} · ${home.cur_.span} celda${home.cur_.span > 1 ? "s" : ""}${home.cur_.fits ? "" : " · fuera de cuadrícula"}`
                     }
                     // гифка кота (services/Gifs) — пока выбран кот. Клик или ←→ в фокусе
                     Column {
@@ -298,7 +305,7 @@ PanelWindow {
                         Lb {
                             width: 404
                             elide: Text.ElideRight
-                            text: `gif · ${Gifs.name(Gifs.cur)} · ${Gifs.sel + 1} of ${Gifs.list.length}`
+                            text: `gif · ${Gifs.name(Gifs.cur)} · ${Gifs.sel + 1} de ${Gifs.list.length}`
                             color: gifStrip.activeFocus ? Theme.fg : Theme.grey
                         }
                         ListView {
@@ -343,7 +350,7 @@ PanelWindow {
                         }
                     }
                     Item { width: 1; height: 40 }
-                    Lb { text: home.off.length ? `off grid · ${home.off.length}` : "everything fits" }
+                    Lb { text: home.off.length ? `fuera de cuadrícula · ${home.off.length}` : "todo cabe" }
                     Flow {
                         width: parent.width
                         spacing: 10
@@ -370,7 +377,7 @@ PanelWindow {
         Page {
             id: deck
             k: 1
-            caption: `deck · ${Theme.state.deck.length} of ${Theme.decks.length} sections · bottom edge`
+            caption: `panel · ${Theme.state.deck.length} de ${Theme.decks.length} secciones · borde inferior`
             property int cur: 0
             // тянут секцию from (-1 — никого): dx — сдвиг курсора в px макета, at — где она в полосе, to — куда встанет
             property int from: -1
@@ -416,7 +423,7 @@ PanelWindow {
                             e.accepted = true;
                         }
 
-                        Lb { visible: !Theme.state.deck.length; anchors.centerIn: parent; text: "empty" }
+                        Lb { visible: !Theme.state.deck.length; anchors.centerIn: parent; text: "vacío" }
                         Repeater {
                             model: Theme.state.deck
                             Item {
@@ -485,9 +492,9 @@ PanelWindow {
 
                 Column {
                     spacing: 14
-                    Toggle { width: 200; text: "deck · hover"; on: Theme.state.deckHover; onFlip: Theme.state.deckHover = !Theme.state.deckHover }
-                    Toggle { width: 200; text: "quick · hover"; on: Theme.state.quickHover; onFlip: Theme.state.quickHover = !Theme.state.quickHover }
-                    Lb { topPadding: 6; text: "bottom edge · right edge"; px: 10 }
+                    Toggle { width: 200; text: "panel · pasar"; on: Theme.state.deckHover; onFlip: Theme.state.deckHover = !Theme.state.deckHover }
+                    Toggle { width: 200; text: "rápido · pasar"; on: Theme.state.quickHover; onFlip: Theme.state.quickHover = !Theme.state.quickHover }
+                    Lb { topPadding: 6; text: "borde inferior · borde derecho"; px: 10 }
                 }
             }
 
@@ -504,7 +511,7 @@ PanelWindow {
         Page {
             id: bar
             k: 2
-            caption: `bar · ${Theme.state.bar.length} of ${Theme.bars.length} in the tray · ${onTop ? "top" : "left"} edge`
+            caption: `barra · ${Theme.state.bar.length} de ${Theme.bars.length} en la bandeja · ${onTop ? "arriba" : "izquierda"} borde`
             readonly property bool onTop: Theme.state.barAt === "top"
             readonly property real step: onTop ? 104 : 68 // слот вдоль бара
             property int cur: 0
@@ -537,7 +544,7 @@ PanelWindow {
                         e.accepted = true;
                     }
 
-                    Lb { visible: !Theme.state.bar.length; anchors.centerIn: parent; text: "empty"; px: 10 }
+                    Lb { visible: !Theme.state.bar.length; anchors.centerIn: parent; text: "vacío"; px: 10 }
                     Repeater {
                         model: Theme.state.bar
                         Item {
@@ -610,50 +617,10 @@ PanelWindow {
 
                 Column {
                     spacing: 14
-                    Lb { text: "edge" }
-                    // экраны с пилюлей у своего края; ←→ — другой
-                    Row {
-                        id: edges
-                        spacing: 20
-                        activeFocusOnTab: true
-                        Keys.onPressed: e => {
-                            if (e.key !== Qt.Key_Left && e.key !== Qt.Key_Right && e.key !== Qt.Key_Space && e.key !== Qt.Key_Return) return;
-                            Theme.state.barAt = bar.onTop ? "left" : "top";
-                            e.accepted = true;
-                        }
-                        Repeater {
-                            model: ["left", "top"]
-                            Column {
-                                id: ed
-                                required property string modelData
-                                readonly property bool on: (modelData === "top") === bar.onTop
-                                spacing: 10
-                                Rectangle {
-                                    width: 200
-                                    height: 125
-                                    radius: 18
-                                    color: Theme.bg
-                                    border { width: ed.on && edges.activeFocus ? 2 : 1; color: ed.on ? Theme.fg : Theme.s3 }
-                                    Behavior on border.color { ColorAnimation { duration: Theme.t } }
-                                    Rectangle {
-                                        x: 10
-                                        y: 10
-                                        width: ed.modelData === "top" ? parent.width - 20 : 16
-                                        height: ed.modelData === "top" ? 16 : parent.height - 20
-                                        radius: Theme.corner(8)
-                                        color: ed.on ? Theme.fg : Theme.s3
-                                        Behavior on color { ColorAnimation { duration: Theme.t } }
-                                    }
-                                    TapHandler { onTapped: Theme.state.barAt = ed.modelData }
-                                    HoverHandler { cursorShape: Qt.PointingHandCursor }
-                                }
-                                Lb { anchors.horizontalCenter: parent.horizontalCenter; text: ed.modelData; px: 10; color: ed.on ? Theme.fg : Theme.grey }
-                            }
-                        }
-                    }
+                    Lb { text: "barra · arriba (fija)"; px: 10; color: Theme.grey }
                     Item { width: 1; height: 12 }
-                    Toggle { width: 200; text: "window title"; on: Theme.state.barTitle; onFlip: Theme.state.barTitle = !Theme.state.barTitle }
-                    Lb { topPadding: 6; text: bar.onTop ? "left of the clock" : "above the clock"; px: 10 }
+                    Toggle { width: 200; text: "título de ventana"; on: Theme.state.barTitle; onFlip: Theme.state.barTitle = !Theme.state.barTitle }
+                    Lb { topPadding: 6; text: "izquierda del reloj"; px: 10 }
                 }
             }
 
@@ -669,7 +636,7 @@ PanelWindow {
         Page {
             id: look
             k: 3
-            caption: "look · the home screen, live"
+            caption: "apariencia · inicio, en vivo"
             property bool dim: false // двоеточие погасло
             Timer { running: look.visible && root.visible && Theme.state.blink; interval: 500; repeat: true; onTriggered: look.dim = !look.dim }
 
@@ -703,14 +670,14 @@ PanelWindow {
 
                 Column {
                     spacing: 14
-                    Toggle { width: 200; text: "dot grid"; on: Theme.state.grid; onFlip: Theme.state.grid = !Theme.state.grid }
-                    Toggle { width: 200; text: "orb"; on: Theme.state.orb; onFlip: Theme.state.orb = !Theme.state.orb }
-                    Toggle { width: 200; text: "24 hours"; on: Theme.state.clock24; onFlip: Theme.state.clock24 = !Theme.state.clock24 }
-                    Toggle { width: 200; text: "blink"; on: Theme.state.blink; onFlip: Theme.state.blink = !Theme.state.blink }
-                    Toggle { width: 200; text: "edges"; on: Theme.state.edges; onFlip: Theme.state.edges = !Theme.state.edges }
+                    Toggle { width: 200; text: "cuadrícula de puntos"; on: Theme.state.grid; onFlip: Theme.state.grid = !Theme.state.grid }
+                    Toggle { width: 200; text: "orbe"; on: Theme.state.orb; onFlip: Theme.state.orb = !Theme.state.orb }
+                    Toggle { width: 200; text: "24 horas"; on: Theme.state.clock24; onFlip: Theme.state.clock24 = !Theme.state.clock24 }
+                    Toggle { width: 200; text: "parpadeo"; on: Theme.state.blink; onFlip: Theme.state.blink = !Theme.state.blink }
+                    Toggle { width: 200; text: "bordes"; on: Theme.state.edges; onFlip: Theme.state.edges = !Theme.state.edges }
                     Act {
                         icon: "\u{F02E9}"
-                        text: "wallpaper"
+                        text: "fondo de pantalla"
                         onHit: {
                             root.close();
                             root.wallRequested();
@@ -726,7 +693,7 @@ PanelWindow {
                 radius: Theme.corner(36)
                 color: Theme.s2
                 border { width: name.activeFocus ? 1 : 0; color: Theme.fg }
-                Lb { id: nameL; x: 30; anchors.verticalCenter: parent.verticalCenter; text: "name"; color: name.activeFocus ? Theme.fg : Theme.grey }
+                Lb { id: nameL; x: 30; anchors.verticalCenter: parent.verticalCenter; text: "nombre"; color: name.activeFocus ? Theme.fg : Theme.grey }
                 TextInput {
                     id: name
                     anchors { left: nameL.right; leftMargin: 24; right: parent.right; rightMargin: 30; verticalCenter: parent.verticalCenter }
@@ -766,7 +733,7 @@ PanelWindow {
             readonly property var p: hot?.item.pal ?? Theme.pal
             readonly property string src: Theme.state.paint === "scheme" ? (Theme.pal.group === "more" ? "" : Theme.pal.group + " ") + Theme.pal.name
                 : Theme.state.paint === "wall" && Theme.tones.length ? `wallpaper · ${Theme.pal.name}` : "nothing"
-            caption: `style · ${src} · ${Theme.light ? "light" : "dark"}` + (hot && !hot.item.now ? `   →   ${hot.item.name} · ↵ sets it` : "")
+            caption: `estilo · ${src} · ${Theme.light ? "claro" : "oscuro"}` + (hot && !hot.item.now ? `   →   ${hot.item.name} · ↵ lo establece` : "")
             function block(h) { return Theme.styles.find(b => b.head === h)?.items ?? []; }
             function peek(sw) {
                 if (sw.peek) hot = sw;
@@ -778,12 +745,12 @@ PanelWindow {
             Row {
                 spacing: 24
                 Pick {
-                    label: "from"
-                    opts: ["nothing", "wall", "palette"]
+                    label: "de"
+                    opts: ["nada", "fondo de pantalla", "paleta"]
                     cur: ["", "wall", "scheme"].indexOf(Theme.state.paint)
                     onPicked: i => Theme.state.paint = ["", "wall", "scheme"][i]
                 }
-                Pick { label: "theme"; opts: ["dark"]; cur: 0; onPicked: () => {} }
+                Pick { label: "tema"; opts: ["oscuro"]; cur: 0; onPicked: () => {} }
             }
 
             // что у источника. Высота одна на все: Page по центру, и макет не прыгал бы при смене источника. ponytail: 300 — на
@@ -794,7 +761,7 @@ PanelWindow {
                 Column {
                     id: own
                     spacing: 28
-                    Lb { visible: !Theme.state.paint; text: "black · white dots · one red — nothing to pick"; color: Theme.mute }
+                    Lb { visible: !Theme.state.paint; text: "negro · puntos blancos · un rojo — nada para elegir"; color: Theme.mute }
                     Row {
                         visible: Theme.state.paint === "wall"
                         spacing: 34
@@ -814,7 +781,7 @@ PanelWindow {
                                 layer.enabled: true
                                 layer.effect: Dm { step: 4 }
                             }
-                            Lb { visible: !Theme.wall; anchors.centerIn: parent; px: 10; text: "no wallpaper" }
+                            Lb { visible: !Theme.wall; anchors.centerIn: parent; px: 10; text: "sin fondo de pantalla" }
                             TapHandler {
                                 onTapped: {
                                     root.close();
@@ -825,7 +792,7 @@ PanelWindow {
                         }
                         Column {
                             spacing: 6
-                            Lb { text: Theme.tones.length ? "tones · from the wallpaper" : "no colour in it · click it for another" }
+                            Lb { text: Theme.tones.length ? "tonos · del fondo de pantalla" : "no tiene color · haz clic para otro" }
                             Row {
                                 Repeater {
                                     model: tint.block("tones").length
@@ -837,7 +804,7 @@ PanelWindow {
                     Column {
                         visible: Theme.state.paint === "wall" && Theme.tones.length > 0
                         spacing: 6
-                        Lb { text: "variant · how much colour, like material you" }
+                        Lb { text: "variante · cuánto color, como material you" }
                         Row {
                             Repeater {
                                 model: tint.block("variant").length
@@ -874,7 +841,7 @@ PanelWindow {
         // ---- WINDOWS: рабочий стол с двумя окнами по живым значениям колец. Анимация окон — только если motion ----
         Page {
             k: 5
-            caption: `windows · hyprland · gaps ${gIn.v} / ${gOut.v} · border ${bord.v} · rounding ${rnd.v} · panels ${pan.v} %`
+            caption: `ventanas · hyprland · huecos ${gIn.v} / ${gOut.v} · borde ${bord.v} · redondeo ${rnd.v} · paneles ${pan.v} %`
 
             Row {
                 spacing: 40
@@ -925,19 +892,19 @@ PanelWindow {
                 // ponytail: blur и тени в макете не видны (плоский чёрный) — только тумблеры
                 Column {
                     spacing: 14
-                    Toggle { width: 200; text: "blur"; on: root.r.blur; onFlip: { root.r.blur = !root.r.blur; Theme.apply(); } }
-                    Toggle { width: 200; text: "shadow"; on: root.r.shadow; onFlip: { root.r.shadow = !root.r.shadow; Theme.apply(); } }
-                    Toggle { width: 200; text: "motion"; on: root.r.motion; onFlip: { root.r.motion = !root.r.motion; Rules.motion(); } }
+                    Toggle { width: 200; text: "desenfoque"; on: root.r.blur; onFlip: { root.r.blur = !root.r.blur; Theme.apply(); } }
+                    Toggle { width: 200; text: "sombra"; on: root.r.shadow; onFlip: { root.r.shadow = !root.r.shadow; Theme.apply(); } }
+                    Toggle { width: 200; text: "movimiento"; on: root.r.motion; onFlip: { root.r.motion = !root.r.motion; Rules.motion(); } }
                 }
             }
 
             Row {
                 spacing: 40
-                Dial { id: gIn; label: "gaps in"; to: 30; value: root.r.gapsIn; onMoved: v => { root.r.gapsIn = v; Theme.apply(); } }
-                Dial { id: gOut; label: "gaps out"; to: 60; value: root.r.gapsOut; onMoved: v => { root.r.gapsOut = v; Theme.apply(); } }
-                Dial { id: bord; label: "border"; to: 6; n: 24; value: root.r.border; onMoved: v => { root.r.border = v; Theme.apply(); } }
-                Dial { id: rnd; label: "rounding"; to: 40; value: Theme.state.rounding; onMoved: v => Theme.state.rounding = v } // shell.qml сам зовёт Theme.apply
-                Dial { id: pan; label: "panels"; to: 100; step: 5; value: Theme.state.corners; onMoved: v => Theme.state.corners = v } // углы шелла, %
+                Dial { id: gIn; label: "huecos internos"; to: 30; value: root.r.gapsIn; onMoved: v => { root.r.gapsIn = v; Theme.apply(); } }
+                Dial { id: gOut; label: "huecos externos"; to: 60; value: root.r.gapsOut; onMoved: v => { root.r.gapsOut = v; Theme.apply(); } }
+                Dial { id: bord; label: "borde"; to: 6; n: 24; value: root.r.border; onMoved: v => { root.r.border = v; Theme.apply(); } }
+                Dial { id: rnd; label: "redondeo"; to: 40; value: Theme.state.rounding; onMoved: v => Theme.state.rounding = v } // shell.qml сам зовёт Theme.apply
+                Dial { id: pan; label: "paneles"; to: 100; step: 5; value: Theme.state.corners; onMoved: v => Theme.state.corners = v } // углы шелла, %
             }
         }
 
@@ -948,7 +915,7 @@ PanelWindow {
             k: 6
             readonly property var m: Rules.mons.find(x => x.name === root.mon) ?? Rules.mon
             readonly property var w: Rules.want(m)
-            caption: `display · ${m.name.toLowerCase()} · ${m.w} × ${m.h} · ${m.hz} hz`
+            caption: `pantalla · ${m.name.toLowerCase()} · ${m.w} × ${m.h} · ${m.hz} hz`
 
             Row {
                 spacing: 60
@@ -1044,37 +1011,37 @@ PanelWindow {
                         Num { anchors.baseline: resW.baseline; text: "×"; font.pixelSize: 40; color: Theme.mute }
                         Num { anchors.baseline: resW.baseline; text: disp.m.lh; font.pixelSize: 72 }
                     }
-                    Lb { text: "logical pixels" }
+                    Lb { text: "píxeles lógicos" }
                 }
                 // подсветка — у встроенного; внешние по DDC — нет (services/Backlight)
                 Column {
                     visible: Sys.hasBri && disp.m.name === Rules.mon.name
                     anchors.verticalCenter: parent.verticalCenter
                     spacing: 22
-                    Dial { anchors.horizontalCenter: parent.horizontalCenter; size: 300; n: 60; live: true; label: "brightness"; value: Math.round(Sys.bri * 100); onMoved: v => Sys.setBri(v / 100) }
+                    Dial { anchors.horizontalCenter: parent.horizontalCenter; size: 300; n: 60; live: true; label: "brillo"; value: Math.round(Sys.bri * 100); onMoved: v => Sys.setBri(v / 100) }
                     // шаг клавиш яркости: делений на шкалу (Backlight.steps)
-                    Pick { anchors.horizontalCenter: parent.horizontalCenter; label: "step"; opts: ["2.5%", "5%", "10%"]; cur: [40, 20, 10].indexOf(Theme.state.briSteps); onPicked: i => Theme.state.briSteps = [40, 20, 10][i] }
+                    Pick { anchors.horizontalCenter: parent.horizontalCenter; label: "paso"; opts: ["2.5%", "5%", "10%"]; cur: [40, 20, 10].indexOf(Theme.state.briSteps); onPicked: i => Theme.state.briSteps = [40, 20, 10][i] }
                 }
             }
             Row {
                 spacing: 24
-                Pick { label: "scale"; opts: Rules.scales; cur: disp.w.scale ? Rules.scales.indexOf(String(disp.w.scale)) : 0; onPicked: i => Rules.set(disp.m.name, "scale", i ? +Rules.scales[i] : 0) }
+                Pick { label: "escala"; opts: Rules.scales; cur: disp.w.scale ? Rules.scales.indexOf(String(disp.w.scale)) : 0; onPicked: i => Rules.set(disp.m.name, "scale", i ? +Rules.scales[i] : 0) }
                 // частот бывает и пять, и восемь (телевизор, 165 Гц) — уже сегменты, чтобы строка не ушла за край холста
                 Pick { label: "hz"; seg: Math.min(104, 416 / opts.length); opts: disp.m.rates.map(String); cur: disp.m.rates.indexOf(disp.w.refresh); onPicked: i => Rules.set(disp.m.name, "refresh", disp.m.rates[i]) }
             }
             // и на одном экране: бар сняли с ноутбука в доке, отстыковали — вернуть его можно только здесь
             Row {
                 spacing: 20
-                Toggle { text: "bar"; on: Theme.scr(root.mon, "bar"); onFlip: Theme.setScr(root.mon, "bar", !on) }
-                Toggle { text: "home"; on: Theme.scr(root.mon, "home"); onFlip: Theme.setScr(root.mon, "home", !on) }
-                Lb { anchors.verticalCenter: parent.verticalCenter; leftPadding: 10; text: "on this screen · its widgets — in home" }
+                Toggle { text: "barra"; on: Theme.scr(root.mon, "bar"); onFlip: Theme.setScr(root.mon, "bar", !on) }
+                Toggle { text: "inicio"; on: Theme.scr(root.mon, "home"); onFlip: Theme.setScr(root.mon, "home", !on) }
+                Lb { anchors.verticalCenter: parent.verticalCenter; leftPadding: 10; text: "en esta pantalla · sus widgets — en inicio" }
                 // свои места, масштаб и герцы внешних — забыть, снова как в конфиге hypr (Rules.forget)
-                Act { visible: Object.keys(Rules.store.outs).length > 0; icon: "\u{F0450}"; text: "hypr config"; onHit: Rules.forget() }
+                Act { visible: Object.keys(Rules.store.outs).length > 0; icon: "\u{F0450}"; text: "config hypr"; onHit: Rules.forget() }
             }
             Row {
                 spacing: 40
-                Toggle { anchors.verticalCenter: parent.verticalCenter; text: "night light"; on: Sys.night; onFlip: Sys.toggleNight() }
-                Dial { label: "warmth · k · all screens"; from: 2500; to: 6500; step: 100; value: root.r.warmth; onMoved: v => { root.r.warmth = v; if (root.r.night) Rules.night(); } }
+                Toggle { anchors.verticalCenter: parent.verticalCenter; text: "luz nocturna"; on: Sys.night; onFlip: Sys.toggleNight() }
+                Dial { label: "calidez · k · todas las pantallas"; from: 2500; to: 6500; step: 100; value: root.r.warmth; onMoved: v => { root.r.warmth = v; if (root.r.night) Rules.night(); } }
             }
         }
 
@@ -1090,7 +1057,7 @@ PanelWindow {
         // ultra — power saver и ещё 60 Гц, без анимаций, blur и теней поверх настроек ----
         Page {
             k: 8
-            caption: `power · ${Rules.modes[Rules.mode].what} · ${Rules.hz} hz`
+            caption: `energía · ${Rules.modes[Rules.mode].what} · ${Rules.hz} hz`
 
             Row {
                 spacing: 32
@@ -1125,15 +1092,15 @@ PanelWindow {
                     }
                 }
             }
-            Lb { text: Rules.store.ultra ? `ultra · ${Rules.rates[0]} hz, no motion, no blur, no shadows — your settings come back when you leave` : "cpu profile only · hz, motion and looks stay yours" }
-            Lb { visible: !PowerProfiles.hasPerformanceProfile; text: "no performance profile on this machine" }
+            Lb { text: Rules.store.ultra ? `ultra · ${Rules.rates[0]} hz, sin movimiento, sin desenfoque, sin sombras — tus ajustes vuelven al salir` : "solo perfil de cpu · hz, movimiento y aspecto se mantienen" }
+            Lb { visible: !PowerProfiles.hasPerformanceProfile; text: "no hay perfil de rendimiento en esta máquina" }
         }
 
         // ---- INPUT: держишь клавишу — первая точка сразу, пауза delay, дальше rate в секунду; по живым кольцам ----
         Page {
             id: inp
             k: 9
-            caption: "input · keyboard · touchpad"
+            caption: "entrada · teclado · panel táctil"
             property int n: 0 // сколько «напечатано»; 0 — клавиша отпущена
             Timer {
                 running: inp.visible && root.visible
@@ -1168,31 +1135,31 @@ PanelWindow {
                             }
                         }
                     }
-                    Lb { text: `hold a key · first, ${delay.v} ms, then ${rate.v} a second` }
+                    Lb { text: `mantén una tecla · primero, ${delay.v} ms, luego ${rate.v} por segundo` }
                 }
             }
             Row {
                 spacing: 40
-                Dial { id: delay; label: "delay · ms"; from: 150; to: 600; step: 10; value: root.r.repeatDelay; onMoved: v => { root.r.repeatDelay = v; Rules.input(); } }
-                Dial { id: rate; label: "rate · /s"; from: 10; to: 60; value: root.r.repeatRate; onMoved: v => { root.r.repeatRate = v; Rules.input(); } }
-                Dial { label: "scroll · %"; from: 10; to: 100; step: 5; value: root.r.scroll; onMoved: v => { root.r.scroll = v; Rules.input(); } }
-                Dial { label: "pointer"; from: -100; to: 100; step: 5; value: root.r.sens; onMoved: v => { root.r.sens = v; Rules.input(); } }
+                Dial { id: delay; label: "retraso · ms"; from: 150; to: 600; step: 10; value: root.r.repeatDelay; onMoved: v => { root.r.repeatDelay = v; Rules.input(); } }
+                Dial { id: rate; label: "velocidad · /s"; from: 10; to: 60; value: root.r.repeatRate; onMoved: v => { root.r.repeatRate = v; Rules.input(); } }
+                Dial { label: "desplazamiento · %"; from: 10; to: 100; step: 5; value: root.r.scroll; onMoved: v => { root.r.scroll = v; Rules.input(); } }
+                Dial { label: "puntero"; from: -100; to: 100; step: 5; value: root.r.sens; onMoved: v => { root.r.sens = v; Rules.input(); } }
             }
             Row {
                 spacing: 20
-                Toggle { text: "natural scroll"; on: root.r.natural; onFlip: { root.r.natural = !root.r.natural; Rules.input(); } }
-                Toggle { text: "tap to click"; on: root.r.tap; onFlip: { root.r.tap = !root.r.tap; Rules.input(); } }
-                Toggle { text: "off while typing"; on: root.r.typingOff; onFlip: { root.r.typingOff = !root.r.typingOff; Rules.input(); } }
-                Toggle { text: "flat accel"; on: root.r.flat; onFlip: { root.r.flat = !root.r.flat; Rules.input(); } }
+                Toggle { text: "desplazamiento natural"; on: root.r.natural; onFlip: { root.r.natural = !root.r.natural; Rules.input(); } }
+                Toggle { text: "tocar para clic"; on: root.r.tap; onFlip: { root.r.tap = !root.r.tap; Rules.input(); } }
+                Toggle { text: "apagar al escribir"; on: root.r.typingOff; onFlip: { root.r.typingOff = !root.r.typingOff; Rules.input(); } }
+                Toggle { text: "aceleración plana"; on: root.r.flat; onFlip: { root.r.flat = !root.r.flat; Rules.input(); } }
             }
-            Pick { label: "layout switch"; opts: Rules.switches.map(s => s[0]); cur: root.r.kbSwitch; onPicked: i => { root.r.kbSwitch = i; Rules.input(); } }
+            Pick { label: "cambio de disposición"; opts: Rules.switches.map(s => s[0]); cur: root.r.kbSwitch; onPicked: i => { root.r.kbSwitch = i; Rules.input(); } }
         }
 
         // ---- IDLE: шкала минут без ввода. Точки тускнеют на каждом событии: бодр → заперт → экран погас → спит.
         // Метки тянутся вдоль, правее 60 — never ----
         Page {
             k: 10
-            caption: "idle · minutes without input · hypridle"
+            caption: "inactividad · minutos sin entrada · hypridle"
 
             Item {
                 id: line
@@ -1219,16 +1186,16 @@ PanelWindow {
                     model: [0, 15, 30, 45, 60]
                     Lb { required property int modelData; x: modelData * 15 - width / 2; y: 272; text: modelData; px: 10 }
                 }
-                Lb { x: 62 * 15 - width / 2; y: 272; text: "never"; px: 10 }
+                Lb { x: 62 * 15 - width / 2; y: 272; text: "nunca"; px: 10 }
 
-                Mark { id: lk; row: 0; label: "lock"; value: root.r.lockAfter; onMoved: v => { root.r.lockAfter = v; Rules.idle(); } }
-                Mark { id: dpms; row: 1; label: "screen off"; value: root.r.dpmsAfter; onMoved: v => { root.r.dpmsAfter = v; Rules.idle(); } }
-                Mark { id: zz; row: 2; label: Rules.hibernateOn ? "sleep · hibernate" : "sleep"; value: root.r.sleepAfter; onMoved: v => { root.r.sleepAfter = v; Rules.idle(); } }
+                Mark { id: lk; row: 0; label: "bloqueo"; value: root.r.lockAfter; onMoved: v => { root.r.lockAfter = v; Rules.idle(); } }
+                Mark { id: dpms; row: 1; label: "apagar pantalla"; value: root.r.dpmsAfter; onMoved: v => { root.r.dpmsAfter = v; Rules.idle(); } }
+                Mark { id: zz; row: 2; label: Rules.hibernateOn ? "suspender · hibernar" : "suspender"; value: root.r.sleepAfter; onMoved: v => { root.r.sleepAfter = v; Rules.idle(); } }
             }
             Row {
                 spacing: 26
                 Repeater {
-                    model: [["awake", Theme.fg], ["locked", Theme.grey], ["dark", Theme.mute], ["asleep", Theme.s3]]
+                    model: [["despierto", Theme.fg], ["bloqueado", Theme.grey], ["oscuro", Theme.mute], ["dormido", Theme.s3]]
                     Row {
                         required property var modelData
                         spacing: 10
@@ -1239,8 +1206,8 @@ PanelWindow {
             }
             Row {
                 spacing: 24
-                Pick { label: "sleep into"; visible: Rules.canHibernate; opts: ["suspend", "hibernate"]; cur: root.r.hibernate ? 1 : 0; onPicked: i => { root.r.hibernate = i === 1; Rules.idle(); } }
-                Toggle { text: "caffeine"; on: Sys.caffeine; onFlip: Sys.caffeine = !Sys.caffeine }
+                Pick { label: "suspender a"; visible: Rules.canHibernate; opts: ["suspender", "hibernar"]; cur: root.r.hibernate ? 1 : 0; onPicked: i => { root.r.hibernate = i === 1; Rules.idle(); } }
+                Toggle { text: "cafeína"; on: Sys.caffeine; onFlip: Sys.caffeine = !Sys.caffeine }
             }
         }
 
@@ -1270,14 +1237,14 @@ PanelWindow {
                 Act {
                     visible: root.shells > 1
                     icon: "\u{F04E1}"
-                    text: "switch shell"
+                    text: "cambiar shell"
                     onHit: {
                         root.close();
                         Quickshell.execDetached(["qs", "-c", "rice"]);
                     }
                 }
-                Act { icon: "\u{F0450}"; text: "reload"; onHit: Quickshell.reload(false) }
-                Toggle { text: "do not disturb"; on: Theme.state.dnd; onFlip: Theme.state.dnd = !Theme.state.dnd }
+                Act { icon: "\u{F0450}"; text: "recargar"; onHit: Quickshell.reload(false) }
+                Toggle { text: "no molestar"; on: Theme.state.dnd; onFlip: Theme.state.dnd = !Theme.state.dnd }
             }
         }
     }
@@ -1378,7 +1345,7 @@ PanelWindow {
                 layer.enabled: true
                 layer.effect: Dm { step: 3 }
             }
-            Lb { visible: tile.cell > 100; anchors.horizontalCenter: parent.horizontalCenter; text: tile.modelData.id; px: 10; color: tile.hot ? Theme.ink : Theme.grey }
+            Lb { visible: tile.cell > 100; anchors.horizontalCenter: parent.horizontalCenter; text: root.widgetNames[tile.modelData.id] ?? tile.modelData.id; px: 10; color: tile.hot ? Theme.ink : Theme.grey }
         }
         TapHandler { onTapped: home.tap(tile.modelData.i) }
         // бросок — после сигнала: смена списка пересоздаёт плитки, в том числе эту

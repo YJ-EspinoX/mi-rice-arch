@@ -14,13 +14,13 @@ Item {
     // выноски: y — строка, x — где на макете она упирается в предмет. Цвета — отдельно, по номеру: в roles они пересоздавали бы
     // выноски на каждую палитру, и образцы прыгали бы, а не перетекали
     readonly property var roles: [
-        { y: 40, x: 607, k: "fg", what: "text · focus · border" },
-        { y: 90, x: 560, k: "s1", what: "bar · panels · kitty" },
+        { y: 40, x: 607, k: "fg", what: "texto · foco · borde" },
+        { y: 90, x: 560, k: "s1", what: "barra · paneles · kitty" },
         { y: 140, x: 484, k: "ansi", what: "terminal" },
-        { y: 193, x: 528, k: "s3", what: "lines · selection · off" },
-        { y: 246, x: 440, k: "bg", what: "wallpaper" },
-        { y: 312, x: 592, k: "accent", what: "the one live thing" },
-        { y: 382, x: 600, k: "red", what: "alarm" }
+        { y: 193, x: 528, k: "s3", what: "líneas · selección · apagado" },
+        { y: 246, x: 440, k: "bg", what: "fondo de pantalla" },
+        { y: 312, x: 592, k: "accent", what: "lo único vivo" },
+        { y: 382, x: 600, k: "red", what: "alarma" }
     ]
     readonly property var cols: [c[6], c[1], null, c[3], c[0], p.accent, p.red]
 
