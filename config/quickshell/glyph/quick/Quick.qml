@@ -116,7 +116,7 @@ PanelWindow {
                             on: Networking.wifiEnabled
                             icon: on ? "\u{F05A9}" : "\u{F05AA}"
                             name: "Wi-Fi"
-                            sub: !on ? "off" : (Networking.connectivity === NetworkConnectivity.Portal ? "sign in · " : "") + (root.net?.name ?? "no network")
+                            sub: !on ? "apagado" : (Networking.connectivity === NetworkConnectivity.Portal ? "iniciar sesión · " : "") + (root.net?.name ?? "sin red")
                             picked: root.pick === "wifi"
                             onClicked: Networking.wifiEnabled = !Networking.wifiEnabled
                             onMenu: root.pick = picked ? "" : "wifi"
@@ -125,7 +125,7 @@ PanelWindow {
                             on: root.bt?.enabled ?? false
                             icon: on ? "\u{F00AF}" : "\u{F00B2}"
                             name: "Bluetooth"
-                            sub: !on ? "off" : root.btDev?.name ?? "on"
+                            sub: !on ? "apagado" : root.btDev?.name ?? "activado"
                             picked: root.pick === "bt"
                             onClicked: if (root.bt) root.bt.enabled = !root.bt.enabled
                             onMenu: root.pick = picked ? "" : "bt"
@@ -189,13 +189,13 @@ PanelWindow {
                         width: parent.width
                         columns: 4
                         rowSpacing: 14
-                        Tile { icon: "\u{F009B}"; name: "dnd"; on: Theme.state.dnd; onClicked: Theme.state.dnd = !Theme.state.dnd }
-                        Tile { icon: "\u{F0594}"; name: "night"; on: Sys.night; onClicked: Sys.toggleNight() }
-                        Tile { icon: "\u{F001D}"; name: "airplane"; on: Sys.air; onClicked: Sys.toggleAir() }
-                        Tile { icon: "\u{F0176}"; name: "caffeine"; on: Sys.caffeine; onClicked: Sys.caffeine = !Sys.caffeine }
-                        Tile { icon: on ? "\u{F036C}" : "\u{F036D}"; name: "mic"; on: Sys.micOn; onClicked: Sys.toggleMic() }
-                        Tile { icon: "\u{F044A}"; name: "record"; on: Sys.rec; picked: root.pick === "rec"; onClicked: { root.close(); Sys.toggleRec(); } onMenu: root.pick = picked ? "" : "rec" }
-                        Tile { icon: "\u{F0483}"; name: "vpn"; on: Sys.vpn; onClicked: Sys.toggleVpn() }
+                        Tile { icon: "\u{F009B}"; name: "NO MOLESTAR"; on: Theme.state.dnd; onClicked: Theme.state.dnd = !Theme.state.dnd }
+                        Tile { icon: "\u{F0594}"; name: "LUZ NOCTURNA"; on: Sys.night; onClicked: Sys.toggleNight() }
+                        Tile { icon: "\u{F001D}"; name: "MODO AVIÓN"; on: Sys.air; onClicked: Sys.toggleAir() }
+                        Tile { icon: "\u{F0176}"; name: "CAFEÍNA"; on: Sys.caffeine; onClicked: Sys.caffeine = !Sys.caffeine }
+                        Tile { icon: on ? "\u{F036C}" : "\u{F036D}"; name: "MICRÓFONO"; on: Sys.micOn; onClicked: Sys.toggleMic() }
+                        Tile { icon: "\u{F044A}"; name: "GRABAR"; on: Sys.rec; picked: root.pick === "rec"; onClicked: { root.close(); Sys.toggleRec(); } onMenu: root.pick = picked ? "" : "rec" }
+                        Tile { icon: "\u{F0483}"; name: "VPN"; on: Sys.vpn; onClicked: Sys.toggleVpn() }
                     }
 
                     Rec { width: parent.width; visible: root.pick === "rec"; onTouched: root.pin(); onStart: { root.close(); Sys.toggleRec(); } }
@@ -282,7 +282,7 @@ PanelWindow {
                         Art { id: mart; x: 12; anchors.verticalCenter: parent.verticalCenter; width: 62; height: 62; step: 4; url: Media.player?.trackArtUrl ?? "" }
                         Column {
                             anchors { left: mart.right; leftMargin: 16; right: mctl.left; rightMargin: 16; verticalCenter: parent.verticalCenter }
-                            Text { textFormat: Text.PlainText; width: parent.width; elide: Text.ElideRight; text: Media.player?.trackTitle || "Nothing on"; font { family: Theme.ui; pixelSize: 16; weight: Font.DemiBold } color: Theme.fg }
+                            Text { textFormat: Text.PlainText; width: parent.width; elide: Text.ElideRight; text: Media.player?.trackTitle || "Nada sonando"; font { family: Theme.ui; pixelSize: 16; weight: Font.DemiBold } color: Theme.fg }
                             Text { textFormat: Text.PlainText; width: parent.width; elide: Text.ElideRight; text: Media.player?.trackArtist ?? ""; font { family: Theme.ui; pixelSize: 13 } color: Theme.grey }
                         }
                         Controls { id: mctl; anchors { right: parent.right; rightMargin: 18; verticalCenter: parent.verticalCenter } size: 20; play: 44 }
@@ -291,12 +291,12 @@ PanelWindow {
                     Item {
                         width: parent.width
                         height: 20
-                        Lb { x: 6; text: `notifications · ${Notes.list.length}` }
+                        Lb { x: 6; text: `notificaciones · ${Notes.list.length}` }
                         Lb {
                             anchors.right: parent.right
                             rightPadding: 6
                             visible: Notes.list.length > 0
-                            text: "clear all"
+                            text: "borrar todo"
                             color: Theme.fg
                             TapHandler { onTapped: { root.pin(); Notes.clear(); } }
                         }

@@ -13,11 +13,11 @@ PanelWindow {
 
     property int sel: 2
     readonly property var items: [
-        ["LOCK", () => Quickshell.execDetached([Quickshell.env("HOME") + "/.config/quickshell/rice/rice", "lock"])],
-        ["SLEEP", () => Quickshell.execDetached(["systemctl", "suspend"])],
-        ["SHUT DOWN", () => Quickshell.execDetached(["systemctl", "poweroff"])],
-        ["REBOOT", () => Quickshell.execDetached(["systemctl", "reboot"])],
-        ["LOG OUT", () => Hyprland.dispatch("hl.dsp.exit()")]
+        ["BLOQUEAR", () => Quickshell.execDetached([Quickshell.env("HOME") + "/.config/quickshell/rice/rice", "lock"])],
+        ["SUSPENDER", () => Quickshell.execDetached(["systemctl", "suspend"])],
+        ["APAGAR", () => Quickshell.execDetached(["systemctl", "poweroff"])],
+        ["REINICIAR", () => Quickshell.execDetached(["systemctl", "reboot"])],
+        ["CERRAR SESIÓN", () => Hyprland.dispatch("hl.dsp.exit()")]
     ]
 
     function open() {
@@ -98,7 +98,7 @@ PanelWindow {
             Ring { anchors.fill: parent; n: 60; dot: 10; f: SysStats.uptime / (6 * 3600) }
             Column {
                 anchors.centerIn: parent
-                Lb { anchors.horizontalCenter: parent.horizontalCenter; text: "uptime" }
+                Lb { anchors.horizontalCenter: parent.horizontalCenter; text: "tiempo activo" }
                 Num {
                     anchors.horizontalCenter: parent.horizontalCenter
                     topPadding: lead + 10
@@ -109,7 +109,7 @@ PanelWindow {
                 Lb {
                     anchors.horizontalCenter: parent.horizontalCenter
                     readonly property int n: Hyprland.toplevels.values.length
-                    text: `${n} window${n === 1 ? "" : "s"} open`
+                    text: `${n} ventana${n !== 1 ? "s" : ""} abierta${n !== 1 ? "s" : ""}`
                 }
             }
         }
@@ -118,9 +118,9 @@ PanelWindow {
             x: 240
             anchors { bottom: parent.bottom; bottomMargin: 70 }
             spacing: 34
-            Lb { text: "↑↓ select" }
-            Lb { text: "↵ confirm" }
-            Lb { text: "esc cancel" }
+            Lb { text: "↑↓ seleccionar" }
+            Lb { text: "↵ confirmar" }
+            Lb { text: "esc cancelar" }
         }
     }
 }

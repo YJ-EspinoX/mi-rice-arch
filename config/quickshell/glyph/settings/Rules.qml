@@ -309,10 +309,10 @@ Singleton {
     // поверх своих настроек, не трогая их: вышел — вернулись. 0 ultra · 1 saver · 2 balanced · 3 performance.
     // Окна (blur, тени) применяет вызвавший: demonshot — windows(), glyph — Theme.apply() (windows() снял бы его скругление)
     readonly property var modes: [
-        { name: "ultra", short: "ULT", what: `power saver · ${rates[0]} hz · still` },
-        { name: "saver", short: "ECO", what: "power saver" },
-        { name: "balanced", short: "BAL", what: "balanced" },
-        { name: "performance", short: "MAX", what: "performance" }
+        { name: "ultra", short: "ULT", what: `ahorro de energía · ${rates[0]} hz · sin movimiento` },
+        { name: "saver", short: "ECO", what: "ahorro de energía" },
+        { name: "balanced", short: "EQU", what: "equilibrado" },
+        { name: "performance", short: "MÁX", what: "rendimiento" }
     ]
     readonly property int mode: store.ultra ? 0 : PowerProfiles.profile + 1
     readonly property int modeCount: PowerProfiles.hasPerformanceProfile ? 4 : 3
