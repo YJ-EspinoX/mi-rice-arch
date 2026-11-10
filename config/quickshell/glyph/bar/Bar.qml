@@ -130,13 +130,14 @@ PanelWindow {
                 anchors.centerIn: parent
                 TapHandler { onTapped: root.clockClicked() }
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
-                Num { text: Theme.hh(clock.date); font.pixelSize: 30 }
+                Num { text: String(clock.date.getHours() % 12 || 12); font.pixelSize: 30 }
                 Num { visible: !root.vert; text: ":"; font.pixelSize: 30 }
                 Num { text: Qt.formatTime(clock.date, "mm"); font.pixelSize: 30 }
+                Num { text: clock.date.getHours() >= 12 ? "PM" : "AM"; font.pixelSize: 22 }
                 Lb {
                     topPadding: root.vert ? 8 : 0
                     leftPadding: root.vert ? 0 : 12
-                    text: Qt.locale("es_HN").toString(clock.date, "ddd d")
+                    text: Qt.locale("es_HN").toString(clock.date, "d/MMM/yyyy")
                     px: 10
                 }
             }

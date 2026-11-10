@@ -36,9 +36,9 @@ Singleton {
     readonly property color glow: light ? Qt.rgba(0, 0, 0, 0.3) : Qt.rgba(1, 1, 1, 0.6)
     readonly property color scrim: fade(bg, light ? 0.8 : 0.74)
 
-    readonly property string dot: "Doto"                   // цифры и короткие слова, не мельче 26px
-    readonly property string ui: "Space Grotesk"
-    readonly property string mono: "Space Mono"            // метки капсом
+    readonly property string dot: "Noto Sans"              // цифры и короткие слова (limpia, sin matriz de puntos)
+    readonly property string ui: "Noto Sans"               // texto de la interfaz
+    readonly property string mono: "Noto Sans"             // etiquetas (antes cápsulas Space Mono)
     readonly property string nf: "JetBrainsMono Nerd Font" // иконки
 
     // холст макета 1920×1080 → экран. ponytail: по первому экрану, на втором раскладка та же (масштаб — hypr), дом лишь тянет
