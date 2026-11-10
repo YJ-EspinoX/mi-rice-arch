@@ -18,7 +18,7 @@ WlSessionLockSurface {
     color: Theme.bg
 
     SystemClock { id: clock; precision: SystemClock.Minutes }
-    readonly property var en: Qt.locale("en_US")
+    readonly property var en: Qt.locale("es_HN")
     readonly property var bat: UPower.displayDevice
     property bool blink: true
     Timer { running: true; interval: 500; repeat: true; onTriggered: root.blink = !root.blink }

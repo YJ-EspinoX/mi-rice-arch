@@ -41,7 +41,7 @@ PanelWindow {
 
     Rectangle {
         anchors.fill: parent
-        color: Theme.fade(Theme.bg, 0.96)
+        color: Theme.fade(Theme.bg, 0.85) // fondo oscuro semi-transparente (glassmorphism)
         MouseArea { anchors.fill: parent; onClicked: root.close() }
     }
 

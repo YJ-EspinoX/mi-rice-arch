@@ -367,7 +367,7 @@ PanelWindow {
                 spacing: 6
                 Lb { text: "profile"; px: 11 }
                 Lb { width: parent.width; elide: Text.ElideRight; text: root.prof.name || "none"; px: 14; color: Theme.fg }
-                Lb { text: `${root.prof.host ?? "local"}${root.prof.updated ? " · upd " + Qt.locale("en_US").toString(new Date(root.prof.updated * 1000), "d MMM") : ""}`; px: 11 }
+                Lb { text: `${root.prof.host ?? "local"}${root.prof.updated ? " · upd " + Qt.locale("es_HN").toString(new Date(root.prof.updated * 1000), "d MMM") : ""}`; px: 11 }
                 Item { width: 1; height: 6 }
                 Seg { visible: (root.prof.total ?? 0) > 0; width: parent.width; height: 6; n: 24; f: (root.prof.spent ?? 0) / (root.prof.total || 1) }
                 Lb { text: `${root.bytes(root.prof.spent ?? 0)} of ${root.prof.total ? root.bytes(root.prof.total) : "∞"} spent`; px: 11 }

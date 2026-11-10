@@ -17,7 +17,7 @@ PanelWindow {
 
     property int mode: 0
     property int sel: 0
-    readonly property var modes: ["apps", "style", "windows", "calc"]
+    readonly property var modes: ["apps", "windows", "calc"]
     readonly property string query: input.text
     property var uses: ({}) // id приложения → сколько раз открыли
 
@@ -83,9 +83,8 @@ PanelWindow {
     readonly property var blocks: {
         const q = query.trim().toLowerCase();
         let b;
-        if (mode === 1) b = Theme.styles.map(x => ({ head: x.head, items: filter(x.items.map(it => Object.assign({ extra: "", keep: true }, it)), q) })).filter(x => x.items.length);
-        else if (mode === 3) b = [];
-        else if (mode === 2) b = [{ head: "windows", sub: String(wins.length), items: filter(wins, q) }];
+        if (mode === 1) b = [{ head: "windows", sub: String(wins.length), items: filter(wins, q) }];
+        else if (mode === 2) b = [];
         else if (q) {
             const r = filter(apps, q);
             b = [{ head: "results", sub: String(r.length), items: r }];
@@ -126,7 +125,7 @@ PanelWindow {
     }
     function launch() {
         if (!shown) return; // гаснет Theme.t и ещё ловит клики: второй клик двойного — второе окно
-        if (mode === 3) {
+        if (mode === 2) {
             if (calcOut) Quickshell.execDetached(["wl-copy", calcOut]);
             return close();
         }
@@ -152,10 +151,10 @@ PanelWindow {
     Process { id: calc; stdout: StdioCollector { onStreamFinished: root.calcOut = text.trim() } }
     onQueryChanged: {
         sel = 0;
-        if (mode === 3 && query.trim()) calc.exec(["qalc", "-t", query]); // exec гасит прошлый расчёт
+        if (mode === 2 && query.trim()) calc.exec(["qalc", "-t", query]); // exec гасит прошлый расчёт
         else calcOut = "";
     }
-    onModeChanged: { sel = 0; flick.contentY = 0; if (mode === 3) queryChanged(); }
+    onModeChanged: { sel = 0; flick.contentY = 0; if (mode === 2) queryChanged(); }
     // список сжался без нового запроса (закрылось окно в windows) — курсор за концом, cur пустой
     onFlatChanged: sel = Math.max(0, Math.min(sel, flat.length - 1))
 
@@ -187,7 +186,7 @@ PanelWindow {
             height: Math.min(stage.height - 280, 30 + 66 + 20 + body.height + 34)
             opacity: root.t
             radius: Theme.corner(44)
-            color: Theme.s1
+            color: Theme.bg // verde jade oscuro (#0A120C) con blur en la capa flotante
             border { width: 1; color: Theme.s2 }
             MouseArea { anchors.fill: parent }
 
@@ -217,15 +216,15 @@ PanelWindow {
                     Text {
                         visible: !input.text
                         x: 6
-                        text: ["Search apps", "Color from nothing, the wallpaper or a palette", "Find a window", "2 + 2, 20 usd to eur…"][root.mode]
+                        text: ["Search apps", "Find a window", "2 + 2, 20 usd to eur…"][root.mode]
                         font: input.font
                         color: Theme.mute
                     }
                     Keys.onPressed: e => {
                         if (e.key === Qt.Key_Escape) root.close();
                         else if (e.key === Qt.Key_Return || e.key === Qt.Key_Enter) root.launch();
-                        else if (e.key === Qt.Key_Tab) root.mode = (root.mode + 1) % 4;
-                        else if (e.key === Qt.Key_Backtab) root.mode = (root.mode + 3) % 4;
+                        else if (e.key === Qt.Key_Tab) root.mode = (root.mode + 1) % 3;
+                        else if (e.key === Qt.Key_Backtab) root.mode = (root.mode + 3) % 3;
                         else if (e.key === Qt.Key_Down) root.move(1, 0);
                         else if (e.key === Qt.Key_Up) root.move(-1, 0);
                         else if (e.key === Qt.Key_Right && (!input.text || input.cursorPosition === input.text.length) && root.flat.length) root.move(0, 1);
@@ -271,7 +270,7 @@ PanelWindow {
 
                     // calc: ответ крупно, Enter — скопировать
                     Column {
-                        visible: root.mode === 3
+                        visible: root.mode === 2
                         topPadding: 10
                         spacing: 10
                         Lb { text: root.calcOut ? "↵ copy" : "qalc" }
@@ -383,14 +382,13 @@ PanelWindow {
             Image {
                 anchors.centerIn: parent
                 visible: status === Image.Ready
-                width: 44
-                height: 44
+                width: 60
+                height: 60
                 source: cell.near ? cell.modelData.src ?? "" : ""
-                sourceSize: Qt.size(44, 44)
+                sourceSize: Qt.size(96, 96)
+                smooth: true
                 asynchronous: true
                 retainWhileLoading: true // ячейке сменили приложение — старая иконка, пока грузится новая
-                layer.enabled: cell.near // слой рисует свой Image и скрытым
-                layer.effect: Dm { step: 2.5 }
             }
             TapHandler { onTapped: { root.sel = cell.modelData.k; root.launch(); } }
             HoverHandler { cursorShape: Qt.PointingHandCursor }

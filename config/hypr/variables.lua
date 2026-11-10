@@ -59,7 +59,7 @@ return {
     -- Gaps
     workspaceGaps              = 15,
     windowGapsIn               = 6,
-    windowGapsOut              = 14,
+    windowGapsOut              = 10,
 
     -- Window styling
     windowOpacity              = 1,
@@ -73,7 +73,7 @@ return {
 
     -- Misc
     volumeStep                 = 5,
-    volumeMax                  = 100,
+    volumeMax                  = 150,
     cursorTheme                = "Bibata-Modern-Classic",
     cursorSize                 = 23,
     sleepGestureCmd            = "systemctl suspend-then-hibernate || systemctl suspend", -- нет гибернации — обычный сон

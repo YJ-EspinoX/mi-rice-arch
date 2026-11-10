@@ -30,7 +30,7 @@ Singleton {
     function setVol(v) {
         if (!sink?.audio) return;
         sink.audio.muted = false;
-        sink.audio.volume = Math.max(0, Math.min(1, v));
+        sink.audio.volume = Math.max(0, Math.min(1.5, v)); // hasta 150%: sobre-amplificación
     }
     // микрофон кто-то слушает — центр знака в баре краснеет
     PwNodeLinkTracker { id: micUse; node: root.mic }

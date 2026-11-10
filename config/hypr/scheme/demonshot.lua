@@ -1,11 +1,11 @@
--- одна тёплая семья: от винного к кости (та же палитра, что в Theme.qml и kitty)
+-- familia verde jade elegante: oscuro, no fosforescente, no saturado
 return {
-    void    = "0D0B0E", -- фон
-    crypt   = "151116", -- окна, бар
-    wine    = "2B1820", -- линии, рамки, неактивный бордер
-    plum    = "4A2236", -- выделение
-    rose    = "B8487A", -- свет, занятые ws
-    crimson = "C7303D", -- фокус, активное
-    ash     = "7A6870", -- вторичный текст
-    bone    = "E9DFDD", -- текст
+    void    = "0A120C", -- fondo muy oscuro verde-negro
+    crypt   = "122016", -- ventanas, bar (verde muy oscuro)
+    wine    = "1E3428", -- líneas, bordes inactivos (verde grisáceo oscuro)
+    plum    = "2E5A41", -- selección (verde medio)
+    rose    = "4CAF50", -- luz, ws ocupados (verde medio claro)
+    crimson = "2E7D32", -- foco, activo (verde esmeralda brillante pero sutil)
+    ash     = "8FBC8F", -- texto secundario (gris verdoso claro)
+    bone    = "E8F5E9", -- texto principal (blanco verdoso muy claro)
 }

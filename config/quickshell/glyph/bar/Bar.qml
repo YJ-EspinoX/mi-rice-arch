@@ -24,11 +24,14 @@ PanelWindow {
     signal clockClicked
 
     readonly property bool vert: Theme.state.barAt !== "top" // всё, кроме top (и неизвестное), — слева
+    readonly property int thick: 60 // grosor sobre el lienzo 1920×1080 (antes 78): barra más delgada
     anchors { left: true; right: !vert; top: true; bottom: vert }
-    implicitWidth: Math.ceil(78 * Theme.s)  // сбоку
-    implicitHeight: Math.ceil(78 * Theme.s) // сверху
+    implicitWidth: Math.ceil(thick * Theme.s)  // сбоку
+    implicitHeight: Math.ceil(thick * Theme.s) // сверху
     color: "transparent"
     WlrLayershell.namespace: "glyph-bar"
+    // reserva su franja en el monitor: las ventanas empiezan debajo (top) o a la derecha (left)
+    exclusionMode: ExclusionMode.Auto
 
     readonly property int active: Hyprland.focusedWorkspace?.id ?? 0
     // шесть точек, больше — если занят или открыт дальний
@@ -45,12 +48,12 @@ PanelWindow {
     Stage {
         Rectangle {
             id: pill
-            x: 14 // от краёв экрана
-            y: 14
-            width: root.vert ? 64 : parent.width - 28
-            height: root.vert ? parent.height - 28 : 64
-            radius: Theme.corner(32)
-            color: Theme.s1
+            x: root.vert ? 6 : 10 // margen desde el borde de la pantalla
+            y: root.vert ? 14 : 6
+            width: root.vert ? parent.width - 12 : parent.width - 20
+            height: root.vert ? parent.height - 28 : parent.height - 12
+            radius: Theme.corner(24)
+            color: Theme.fade(Theme.s1, 0.88)   // fondo oscuro semi-transparente (glassmorphism)
             border { width: 1; color: Theme.s2 }
 
             Notch { onNotch: d => root.go(d > 0 ? "-1" : "+1") }
@@ -133,7 +136,7 @@ PanelWindow {
                 Lb {
                     topPadding: root.vert ? 8 : 0
                     leftPadding: root.vert ? 0 : 12
-                    text: Qt.locale("en_US").toString(clock.date, "ddd d")
+                    text: Qt.locale("es_HN").toString(clock.date, "ddd d")
                     px: 10
                 }
             }

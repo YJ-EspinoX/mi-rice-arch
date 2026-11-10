@@ -418,7 +418,7 @@ Rectangle {
                 x: -width / 2
                 y: -128
                 px: 12
-                text: Qt.locale("en_US").toString(root.now, "ddd · d MMM")
+                text: Qt.locale("es_HN").toString(root.now, "ddd · d MMM")
                 opacity: root.face
             }
 

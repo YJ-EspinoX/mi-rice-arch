@@ -45,9 +45,12 @@ const ALL = [
       ansi: ["#343F44", "#E67E80", "#A7C080", "#DBBC7F", "#7FBBB3", "#D699B6", "#83C092", "#859289", "#868D80", "#E67E80", "#A7C080", "#DBBC7F", "#7FBBB3", "#D699B6", "#83C092", "#9DA9A0"] },
     { id: "kanagawa", name: "kanagawa", group: "more", light: false,
       c: ["#16161D", "#1F1F28", "#2A2A37", "#363646", "#54546D", "#727169", "#DCD7BA"], accent: "#7E9CD8", red: "#E82424",
-      ansi: ["#16161D", "#C34043", "#76946A", "#C0A36E", "#7E9CD8", "#957FB8", "#6A9589", "#C8C093", "#727169", "#E82424", "#98BB6C", "#E6C384", "#7FB4CA", "#938AA9", "#7AA89F", "#DCD7BA"] }
+      ansi: ["#16161D", "#C34043", "#76946A", "#C0A36E", "#7E9CD8", "#957FB8", "#6A9589", "#C8C093", "#727169", "#E82424", "#98BB6C", "#E6C384", "#7FB4CA", "#938AA9", "#7AA89F", "#DCD7BA"] },
+    { id: "jade", name: "jade", group: "jade", light: false,
+      c: ["#0A120C", "#122016", "#1E3428", "#2E5A41", "#3D6E53", "#5C8A73", "#E8F5E9"], accent: "#2E7D32", red: "#C7303D",
+      ansi: ["#2E5A41", "#C7303D", "#4CAF50", "#DBBC7F", "#7E9CD8", "#B79BC2", "#2E7D32", "#E8F5E9", "#5C8A73", "#C7303D", "#4CAF50", "#DBBC7F", "#7E9CD8", "#B79BC2", "#2E7D32", "#FFFFFF"] }
 ];
-const GROUPS = ["catppuccin", "rosé pine", "gruvbox", "more"];
+const GROUPS = ["catppuccin", "rosé pine", "gruvbox", "more", "jade"];
 
 // ---- обои → палитра, как dynamic в caelestia (material you). Тон обоев — исходный цвет, вариант решает, куда повернуть оттенок
 // акцента и сколько цвета дать ему и серым. Раскладка — от base (палитра nothing той же темы): серые той же светлоты, акцент —

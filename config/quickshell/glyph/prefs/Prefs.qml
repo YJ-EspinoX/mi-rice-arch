@@ -153,7 +153,7 @@ PanelWindow {
 
     Rectangle {
         anchors.fill: parent
-        color: Theme.bg // сплошной: сквозь 5% просвечивали яркие куски окон позади
+        color: Theme.fade(Theme.bg, 0.9) // fondo oscuro semi-transparente (glassmorphism)
         opacity: root.t
         MouseArea { anchors.fill: parent; onClicked: stage.forceActiveFocus() } // мимо — только снять фокус; закрывает esc
     }
@@ -686,7 +686,7 @@ PanelWindow {
                         Num { text: Qt.formatTime(clock.date, "mm"); font.pixelSize: 120 }
                         Lb { visible: !Theme.state.clock24; anchors.baseline: hrs.baseline; leftPadding: 12; text: clock.date.getHours() < 12 ? "am" : "pm" }
                     }
-                    Lb { x: 64; y: 172; text: Qt.locale("en_US").toString(clock.date, "dddd · d MMMM"); px: 11 }
+                    Lb { x: 64; y: 172; text: Qt.locale("es_HN").toString(clock.date, "dddd · d MMMM"); px: 11 }
                     Text {
                         x: 62
                         y: 232
@@ -703,7 +703,6 @@ PanelWindow {
 
                 Column {
                     spacing: 14
-                    Toggle { width: 200; text: "light"; on: Theme.light; onFlip: Theme.setLight(!Theme.light) }
                     Toggle { width: 200; text: "dot grid"; on: Theme.state.grid; onFlip: Theme.state.grid = !Theme.state.grid }
                     Toggle { width: 200; text: "orb"; on: Theme.state.orb; onFlip: Theme.state.orb = !Theme.state.orb }
                     Toggle { width: 200; text: "24 hours"; on: Theme.state.clock24; onFlip: Theme.state.clock24 = !Theme.state.clock24 }
@@ -784,7 +783,7 @@ PanelWindow {
                     cur: ["", "wall", "scheme"].indexOf(Theme.state.paint)
                     onPicked: i => Theme.state.paint = ["", "wall", "scheme"][i]
                 }
-                Pick { label: "theme"; opts: ["dark", "light"]; cur: Theme.light ? 1 : 0; onPicked: i => Theme.setLight(i === 1) }
+                Pick { label: "theme"; opts: ["dark"]; cur: 0; onPicked: () => {} }
             }
 
             // что у источника. Высота одна на все: Page по центру, и макет не прыгал бы при смене источника. ponytail: 300 — на

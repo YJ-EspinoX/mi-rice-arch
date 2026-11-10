@@ -21,3 +21,8 @@ hl.env("XDG_SESSION_DESKTOP", "Hyprland")
 
 -- Others
 hl.env("_JAVA_AWT_WM_NONREPARENTING", "1")
+
+-- Idioma del sistema y de la interfaz
+hl.env("LANG", "es_HN.UTF-8")
+hl.env("LC_MESSAGES", "es_HN.UTF-8")
+hl.env("LANGUAGE", "es_HN:es")

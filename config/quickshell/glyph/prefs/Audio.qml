@@ -70,6 +70,7 @@ Row {
                 n: 48
                 live: true
                 label: side.label
+                to: side.out ? 150 : 100 // salida hasta 150%: sobre-amplificación
                 value: Math.round((side.node?.audio?.volume ?? 0) * 100)
                 onMoved: v => {
                     if (side.out) side.node.audio.muted = false; // the mic stays muted: its gain isn't a reason to open it

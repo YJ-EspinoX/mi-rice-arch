@@ -55,8 +55,8 @@ PanelWindow {
 
     Rectangle {
         anchors.fill: parent
-        color: "#000000"
-        opacity: 0.35 * root.t
+        color: Theme.fade(Theme.bg, 0.85)
+        opacity: root.t
         MouseArea { anchors.fill: parent; onClicked: root.close() }
     }
 
@@ -78,7 +78,7 @@ PanelWindow {
                 height: col.height + 44
                 opacity: root.t
                 radius: Theme.corner(36)
-                color: Theme.s1
+                color: Theme.fade(Theme.s1, 0.9)
                 border { width: 1; color: Theme.s2 }
                 focus: true
                 Keys.onEscapePressed: root.close()
@@ -99,7 +99,7 @@ PanelWindow {
                             anchors.verticalCenter: parent.verticalCenter
                             spacing: 14
                             Num { anchors.verticalCenter: parent.verticalCenter; text: `${Theme.hh(clock.date)}:${Qt.formatTime(clock.date, "mm")}`; font.pixelSize: 44 }
-                            Lb { anchors.verticalCenter: parent.verticalCenter; text: Qt.locale("en_US").toString(clock.date, "ddd d MMM") }
+                            Lb { anchors.verticalCenter: parent.verticalCenter; text: Qt.locale("es_HN").toString(clock.date, "ddd d MMM") }
                         }
                         Row {
                             anchors { right: parent.right; rightMargin: 6; verticalCenter: parent.verticalCenter }
@@ -196,13 +196,12 @@ PanelWindow {
                         Tile { icon: on ? "\u{F036C}" : "\u{F036D}"; name: "mic"; on: Sys.micOn; onClicked: Sys.toggleMic() }
                         Tile { icon: "\u{F044A}"; name: "record"; on: Sys.rec; picked: root.pick === "rec"; onClicked: { root.close(); Sys.toggleRec(); } onMenu: root.pick = picked ? "" : "rec" }
                         Tile { icon: "\u{F0483}"; name: "vpn"; on: Sys.vpn; onClicked: Sys.toggleVpn() }
-                        Tile { icon: "\u{F050E}"; name: "dark"; on: !Theme.light; onClicked: Theme.setLight(!Theme.light) }
                     }
 
                     Rec { width: parent.width; visible: root.pick === "rec"; onTouched: root.pin(); onStart: { root.close(); Sys.toggleRec(); } }
 
                     Slider { icon: "\u{F00E0}"; visible: Sys.hasBri; value: Sys.bri; onMoved: v => Sys.setBri(v) }
-                    Slider { icon: Sys.muted ? "\u{F075F}" : "\u{F057E}"; value: Sys.muted ? 0 : Sys.vol; onMoved: v => Sys.setVol(v) }
+                    Slider { icon: Sys.muted ? "\u{F075F}" : "\u{F057E}"; value: Sys.muted ? 0 : Sys.vol; max: 1.5; onMoved: v => Sys.setVol(v) }
 
                     // режим питания, как в caelestia: четыре клетки, белая заливка переезжает к выбранной; засечки — сила.
                     // ultra — ещё 60 Гц и без анимаций, blur и теней (Rules.modes)
@@ -480,6 +479,7 @@ PanelWindow {
         id: sl
         property real value
         property string icon
+        property real max: 1
         signal moved(real v)
         readonly property real shown: area.pressed ? area.v : value
         width: col.width
@@ -497,7 +497,7 @@ PanelWindow {
             }
         }
         Rectangle {
-            width: Math.max(height, sl.width * sl.shown)
+            width: Math.max(height, sl.width * Math.min(1, sl.shown / sl.max))
             height: parent.height
             radius: Theme.corner(27)
             color: Theme.fg
@@ -517,7 +517,7 @@ PanelWindow {
             property real wacc: 0
             anchors.fill: parent
             preventStealing: true
-            function set(x) { v = Math.max(0, Math.min(1, x / width)); sl.moved(v); }
+            function set(x) { v = Math.max(0, Math.min(sl.max, x / width * sl.max)); sl.moved(v); }
             // pin на отпускании: в панели, открытой наведением, он отдаёт ей клавиатуру (None → Exclusive), и Hyprland на это
             // отпускает все кнопки мыши — первый drag после peek доезжал до точки клика и обрывался
             onPressed: e => set(e.x)
@@ -531,7 +531,7 @@ PanelWindow {
                 wacc += (e.inverted ? -1 : 1) * (e.angleDelta.y || -e.angleDelta.x) / 120 * 0.05 * (e.phase === Qt.NoScrollPhase ? 1 : 0.25);
                 if (Math.abs(wacc) < 0.02)
                     return;
-                sl.moved(Math.max(0, Math.min(1, sl.shown + wacc)));
+                sl.moved(Math.max(0, Math.min(sl.max, sl.shown + wacc)));
                 wacc = 0;
             }
         }

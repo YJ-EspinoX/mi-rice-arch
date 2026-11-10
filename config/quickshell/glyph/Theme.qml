@@ -126,7 +126,7 @@ Singleton {
             it("wallpaper", make({ paint: "wall" }), st.paint === "wall" && !!tones.length, set("paint", "wall"), tones[0]),
             it("palette", make({ paint: "scheme" }), st.paint === "scheme", set("paint", "scheme"))
         ] }].concat(own.filter(b => b.items.length), [
-            { head: "theme", items: [["dark", false], ["light", true]].map(([n, l]) => it(n, make({ light: l, scheme: pair(l)?.id ?? st.scheme }),
+            { head: "theme", items: [["dark", false]].map(([n, l]) => it(n, make({ light: l, scheme: pair(l)?.id ?? st.scheme }),
                 light === l, () => setLight(l))) }
         ]);
     }
@@ -203,7 +203,7 @@ Singleton {
             property var deck: ["clock", "weather", "perf", "net", "media"] // её секции по порядку, см. decks
             property var bar: ["layout", "wifi", "bluetooth", "sound", "notes", "battery", "mode", "power"] // трей бара сверху вниз, см. bars
             property bool barTitle: true   // заголовок окна столбиком в баре
-            property string barAt: "left" // left или top; за баром едут календарь, карточка батареи, дом, остров и вспышка Glyph
+            property string barAt: "top" // left или top; за баром едут календарь, карточка батареи, дом, остров и вспышка Glyph
             // свои у монитора, по модели (Theme.sid): { "TS2700-S6-1": { bar: false, home: false, wall: "…", widgets: […] } }; нет — общие (Theme.scr)
             property var screens: ({})
             // запись (quick/Rec, Sys.recArgs)

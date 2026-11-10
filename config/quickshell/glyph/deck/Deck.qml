@@ -23,7 +23,7 @@ Scope {
     Binding { target: SysStats; property: "perf"; value: root.on !== null }
 
     SystemClock { id: clock; precision: SystemClock.Minutes }
-    readonly property var en: Qt.locale("en_US")
+    readonly property var en: Qt.locale("es_HN")
     function hm(d) { return Qt.formatTime(d, Theme.state.clock24 ? "hh:mm" : "h:mm ap"); }
     function week(d) { // ISO-неделя, как в Home
         const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));

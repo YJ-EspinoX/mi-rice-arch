@@ -29,14 +29,14 @@ PanelWindow {
     WlrLayershell.namespace: "glyph-cal"
 
     SystemClock { id: clock; precision: SystemClock.Hours }
-    readonly property var en: Qt.locale("en_US")
+    readonly property var en: Qt.locale("es_HN")
     readonly property var month: new Date(clock.date.getFullYear(), clock.date.getMonth() + shift, 1)
     readonly property int lead: (month.getDay() + 6) % 7 // дней прошлого месяца до понедельника
 
     Rectangle {
         anchors.fill: parent
-        color: "#000000"
-        opacity: 0.35 * root.t
+        color: Theme.fade(Theme.bg, 0.85)
+        opacity: root.t
         MouseArea { anchors.fill: parent; onClicked: root.close() }
     }
 
@@ -52,7 +52,7 @@ PanelWindow {
             height: col.height + 52
             opacity: root.t
             radius: Theme.corner(36)
-            color: Theme.s1
+            color: Theme.fade(Theme.s1, 0.9)
             border { width: 1; color: Theme.s2 }
             focus: true
             Keys.onPressed: e => {
