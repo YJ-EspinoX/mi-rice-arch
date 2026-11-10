@@ -49,7 +49,7 @@ PanelWindow {
         t.setUTCDate(t.getUTCDate() + 4 - (t.getUTCDay() || 7));
         return Math.ceil(((t - Date.UTC(t.getUTCFullYear(), 0, 1)) / 86400000 + 1) / 7);
     }
-    readonly property string hello: { const h = clock.date.getHours(); return h < 5 ? "Good night" : h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening"; }
+    readonly property string hello: { const h = clock.date.getHours(); return h < 5 ? "Buenas noches" : h < 12 ? "Buenos días" : h < 18 ? "Buenas tardes" : "Buenas noches"; }
 
     Stage {
         id: stage
@@ -67,7 +67,7 @@ PanelWindow {
         Lb {
             x: 190
             y: 448
-            text: `${root.en.toString(clock.date, "dddd · d MMMM")} · week ${root.week(clock.date)}`
+            text: `${root.en.toString(clock.date, "dddd · d MMMM")} · semana ${root.week(clock.date)}`
             px: 14
         }
         Text {
@@ -156,7 +156,7 @@ PanelWindow {
                         width: parent.width
                         topPadding: 14
                         Repeater {
-                            model: ["M", "T", "W", "T", "F", "S", "S"]
+                            model: ["L", "M", "M", "J", "V", "S", "D"]
                             Text {
                                 required property string modelData
                                 required property int index
@@ -178,14 +178,14 @@ PanelWindow {
         Component { id: cpuW; RingW { f: SysStats.cpu; value: Math.round(SysStats.cpu * 100); label: "cpu %" } }
         Component { id: ramW; RingW { f: SysStats.mem; value: Math.round(SysStats.mem * 100); label: "ram %" } }
         Component { id: gpuW; RingW { f: SysStats.gpu; value: Math.round(SysStats.gpu * 100); label: `gpu · ${Math.round(SysStats.gpuTemp)}°` } }
-        Component { id: diskW; RingW { f: SysStats.disks[0]?.used ?? 0; value: Math.round((SysStats.disks[0]?.used ?? 0) * 100); label: "disk %" } }
+        Component { id: diskW; RingW { f: SysStats.disks[0]?.used ?? 0; value: Math.round((SysStats.disks[0]?.used ?? 0) * 100); label: "disco %" } }
         Component {
             id: batteryW
             RingW {
                 readonly property var bat: UPower.displayDevice
                 f: bat.percentage
                 value: Math.round(bat.percentage * 100)
-                label: bat.state === UPowerDeviceState.Charging ? "charging" : "battery"
+                label: bat.state === UPowerDeviceState.Charging ? "cargando" : "batería"
                 on: bat.state !== UPowerDeviceState.Charging && bat.percentage < 0.15 ? Theme.red : Theme.fg
             }
         }
@@ -207,12 +207,12 @@ PanelWindow {
                 }
                 Column {
                     anchors { left: art.right; leftMargin: 26; right: parent.right; rightMargin: 28; verticalCenter: parent.verticalCenter }
-                    Lb { text: `now playing · ${root.player?.identity ?? "silence"}`; width: parent.width; elide: Text.ElideRight }
+                    Lb { text: `reproduciendo · ${root.player?.identity ?? "silencio"}`; width: parent.width; elide: Text.ElideRight }
                     Text {
                         width: parent.width
                         topPadding: 10
                         elide: Text.ElideRight
-                        text: root.player?.trackTitle || "Nothing on"
+                        text: root.player?.trackTitle || "Nada sonando"
                         textFormat: Text.PlainText
                         font { family: Theme.ui; pixelSize: 26; weight: Font.DemiBold }
                         color: Theme.fg
@@ -250,7 +250,7 @@ PanelWindow {
                         width: 130
                         horizontalAlignment: Text.AlignHCenter
                         elide: Text.ElideRight
-                        text: root.buds?.name ?? "volume"
+                        text: root.buds?.name ?? "volumen"
                     }
                 }
             }
@@ -309,7 +309,7 @@ PanelWindow {
                     Stat { label: "cpu"; value: Math.round(SysStats.cpu * 100) + "%" }
                     Stat { label: "mem"; value: SysStats.memUsed.toFixed(1) + "G" }
                     Stat { label: "gpu"; value: Math.round(SysStats.gpuTemp) + "°" }
-                    Stat { label: "disk"; value: Math.round((SysStats.disks[0]?.used ?? 0) * 100) + "%" }
+                    Stat { label: "disco"; value: Math.round((SysStats.disks[0]?.used ?? 0) * 100) + "%" }
                 }
                 Column {
                     x: 344

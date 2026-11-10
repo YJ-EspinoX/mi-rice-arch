@@ -24,7 +24,7 @@ Scope {
 
     SystemClock { id: clock; precision: SystemClock.Minutes }
     readonly property var en: Qt.locale("es_HN")
-    function hm(d) { return Qt.formatTime(d, Theme.state.clock24 ? "hh:mm" : "h:mm ap"); }
+    function hm(d) { const h = d.getHours(); return String(h % 12 || 12) + ":" + String(d.getMinutes()).padStart(2, "0") + (h >= 12 ? " PM" : " AM"); }
     function week(d) { // ISO-неделя, как в Home
         const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
         t.setUTCDate(t.getUTCDate() + 4 - (t.getUTCDay() || 7));
@@ -121,13 +121,14 @@ Scope {
                 id: clockC
                 Column {
                     width: 216
-                    Lb { text: root.en.dayName(clock.date.getDay()) + (Theme.state.clock24 ? "" : clock.date.getHours() < 12 ? " · am" : " · pm") }
-                    Num {
-                        topPadding: lead + 10
-                        text: Theme.state.clock24 ? Qt.formatTime(clock.date, "hh:mm") : (clock.date.getHours() % 12 || 12) + Qt.formatTime(clock.date, ":mm")
-                        font.pixelSize: 72
+                    Lb { text: root.en.dayName(clock.date.getDay()) + (clock.date.getHours() < 12 ? " · am" : " · pm") }
+                    Row {
+                        spacing: 4
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        Num { text: (clock.date.getHours() % 12 || 12) + ":" + String(clock.date.getMinutes()).padStart(2, "0"); font.pixelSize: 44 }
+                        Num { text: clock.date.getHours() >= 12 ? "PM" : "AM"; font.pixelSize: 24; color: Theme.grey }
                     }
-                    Lb { topPadding: 12; text: `${root.en.toString(clock.date, "d MMMM")} · week ${root.week(clock.date)}` }
+                    Lb { topPadding: 12; text: `${root.en.toString(clock.date, "d MMMM")} · semana ${root.week(clock.date)}` }
                     Item { width: 1; height: 24 }
                     Seg { width: parent.width; height: 6; n: 24; f: Weather.sun ? (clock.date - Weather.sun.rise) / (Weather.sun.set - Weather.sun.rise) : 0 }
                     Item {
@@ -144,7 +145,7 @@ Scope {
                 id: weatherC
                 Column {
                     width: 188
-                    Lb { width: parent.width; elide: Text.ElideRight; text: Weather.ok ? Weather.name(Weather.now.code) : "no sky" }
+                    Lb { width: parent.width; elide: Text.ElideRight; text: Weather.ok ? Weather.name(Weather.now.code) : "sin cielo" }
                     Item { width: 1; height: 10 }
                     Row {
                         spacing: 8
@@ -157,7 +158,7 @@ Scope {
                         }
                         Num { anchors.verticalCenter: parent.verticalCenter; text: Weather.ok ? Math.round(Weather.now.temp) + "°" : "--"; font.pixelSize: 54 }
                     }
-                    Lb { topPadding: 8; visible: Weather.ok; text: `feels ${Math.round(Weather.now?.feels)}° · ${Math.round(Weather.now?.wind)} m/s`; px: 11 }
+                    Lb { topPadding: 8; visible: Weather.ok; text: `sensación térmica ${Math.round(Weather.now?.feels)}° · ${Math.round(Weather.now?.wind)} m/s`; px: 11 }
                     Item { width: 1; height: 18 }
                     Row {
                         spacing: 8
@@ -201,7 +202,7 @@ Scope {
                         Column {
                             width: 160
                             spacing: 4
-                            Lb { bottomPadding: 2; text: "processes"; px: 10 }
+                            Lb { bottomPadding: 2; text: "procesos"; px: 10 }
                             Repeater {
                                 model: SysStats.procs
                                 Row {
@@ -216,7 +217,7 @@ Scope {
                         Column {
                             width: 126
                             spacing: 6
-                            Lb { text: `cores · ${SysStats.cpuFreq.toFixed(1)} ghz`; px: 10 }
+                            Lb { text: `núcleos · ${SysStats.cpuFreq.toFixed(1)} ghz`; px: 10 }
                             // столбец на ядро: верхняя точка белая, под ней серые — как график cpu в Home
                             Grid {
                                 id: cores
@@ -252,7 +253,7 @@ Scope {
                 id: netC
                 Column {
                     width: 176
-                    Lb { width: parent.width; elide: Text.ElideRight; text: "net · " + (SysStats.iface || "offline") }
+                    Lb { width: parent.width; elide: Text.ElideRight; text: "red · " + (SysStats.iface || "desconectado") }
                     Item { width: 1; height: 10 }
                     Speed { icon: "\u{F0045}"; b: SysStats.rx }
                     Item { width: 1; height: 8 }
@@ -289,7 +290,7 @@ Scope {
                 id: mediaC
                 Column {
                     width: 240
-                    Lb { width: parent.width; elide: Text.ElideRight; text: Media.player?.identity ?? "silence" }
+                    Lb { width: parent.width; elide: Text.ElideRight; text: Media.player?.identity ?? "silencio" }
                     Item { width: 1; height: 12 }
                     Row {
                         spacing: 14
@@ -309,7 +310,7 @@ Scope {
                                 wrapMode: Text.Wrap
                                 maximumLineCount: 2
                                 elide: Text.ElideRight
-                                text: Media.player?.trackTitle || "Nothing on"
+                                text: Media.player?.trackTitle || "Nada sonando"
                                 textFormat: Text.PlainText
                                 font { family: Theme.ui; pixelSize: 17; weight: Font.DemiBold }
                                 color: Theme.fg

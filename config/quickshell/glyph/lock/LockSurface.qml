@@ -66,9 +66,10 @@ WlSessionLockSurface {
             y: 230
             opacity: root.ph(0, 0.5)
             transform: Translate { y: -40 * (1 - root.ph(0, 0.5)) }
-            Num { text: Theme.hh(clock.date); font.pixelSize: 400 }
+            Num { text: String(clock.date.getHours() % 12 || 12); font.pixelSize: 400 }
             Num { text: ":"; font.pixelSize: 400; opacity: root.blink || !Theme.state.blink ? 1 : 0.2 }
             Num { text: Qt.formatTime(clock.date, "mm"); font.pixelSize: 400 }
+            Num { text: clock.date.getHours() >= 12 ? "PM" : "AM"; font.pixelSize: 130 }
         }
         Lb {
             anchors.horizontalCenter: parent.horizontalCenter

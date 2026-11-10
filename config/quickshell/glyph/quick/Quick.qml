@@ -98,7 +98,8 @@ PanelWindow {
                             x: 6
                             anchors.verticalCenter: parent.verticalCenter
                             spacing: 14
-                            Num { anchors.verticalCenter: parent.verticalCenter; text: `${Theme.hh(clock.date)}:${Qt.formatTime(clock.date, "mm")}`; font.pixelSize: 44 }
+                            Num { anchors.verticalCenter: parent.verticalCenter; text: `${String(clock.date.getHours() % 12 || 12)}:${Qt.formatTime(clock.date, "mm")}`; font.pixelSize: 44 }
+                            Num { anchors.verticalCenter: parent.verticalCenter; leftPadding: 10; text: clock.date.getHours() >= 12 ? "PM" : "AM"; font.pixelSize: 30; color: Theme.grey }
                             Lb { anchors.verticalCenter: parent.verticalCenter; text: Qt.locale("es_HN").toString(clock.date, "ddd d MMM") }
                         }
                         Row {

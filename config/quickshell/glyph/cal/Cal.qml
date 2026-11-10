@@ -94,7 +94,7 @@ PanelWindow {
                     width: parent.width
                     columns: 7
                     Repeater {
-                        model: ["M", "T", "W", "T", "F", "S", "S"]
+                        model: ["L", "M", "M", "J", "V", "S", "D"]
                         Text {
                             required property string modelData
                             width: col.width / 7
@@ -140,7 +140,7 @@ PanelWindow {
                             Lb {
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 topPadding: 10
-                                text: Focus.running ? "focus" : Focus.paused ? "paused" : "ready"
+                                text: Focus.running ? "enfoque" : Focus.paused ? "pausado" : "listo"
                                 color: Focus.running ? Theme.fg : Theme.grey
                                 px: 10
                             }
@@ -149,7 +149,7 @@ PanelWindow {
                     Column {
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 16
-                        Lb { text: "focus · min" }
+                        Lb { text: "enfoque · min" }
                         Row {
                             spacing: 8
                             Repeater {
@@ -181,7 +181,7 @@ PanelWindow {
                                     Icon { anchors.verticalCenter: parent.verticalCenter; text: Focus.running ? "\u{F03E4}" : "\u{F040A}"; color: Focus.running ? Theme.fg : Theme.ink }
                                     Lb {
                                         anchors.verticalCenter: parent.verticalCenter
-                                        text: Focus.running ? "pause" : Focus.paused ? "resume" : "start"
+                                        text: Focus.running ? "pausar" : Focus.paused ? "reanudar" : "iniciar"
                                         color: Focus.running ? Theme.fg : Theme.ink
                                     }
                                 }

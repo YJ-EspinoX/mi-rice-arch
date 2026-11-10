@@ -57,7 +57,7 @@ Scope {
         const x = Math.round(scr.x + r.x * s), y = Math.round(scr.y + r.y * s);
         shotRect = r;
         shotRec = mode === 3;
-        shotWhat = `${modes[mode]} · ${Qt.formatTime(new Date(), "hh:mm")}`;
+        const n = new Date(); shotWhat = `${modes[mode]} · ${n.getHours() % 12 || 12}:${String(n.getMinutes()).padStart(2, "0")} ${n.getHours() >= 12 ? "PM" : "AM"}`;
         shotDims = `${w}×${h}`;
         // оверлей гаснет сразу, без анимации: запись и снимок с таймером идут с живого экрана
         aim.snap = true;

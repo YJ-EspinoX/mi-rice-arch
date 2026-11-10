@@ -64,8 +64,9 @@ Item {
             }
             Column {
                 anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; bottomMargin: 16 }
-                Cap { text: Theme.hh(clock.date); color: root.c[6]; font.pixelSize: 11 }
+                Cap { text: String(clock.date.getHours() % 12 || 12); color: root.c[6]; font.pixelSize: 11 }
                 Cap { text: Qt.formatTime(clock.date, "mm"); color: root.c[6]; font.pixelSize: 11 }
+                Cap { text: clock.date.getHours() >= 12 ? "PM" : "AM"; color: root.c[6]; font.pixelSize: 9 }
             }
         }
 

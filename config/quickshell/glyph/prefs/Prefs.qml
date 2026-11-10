@@ -648,10 +648,10 @@ PanelWindow {
                     Row {
                         x: 60
                         y: 52
-                        Num { id: hrs; text: Theme.hh(clock.date); font.pixelSize: 120 }
+                        Num { id: hrs; text: String(clock.date.getHours() % 12 || 12); font.pixelSize: 120 }
                         Num { text: ":"; font.pixelSize: 120; opacity: Theme.state.blink && look.dim ? 0.2 : 1 }
                         Num { text: Qt.formatTime(clock.date, "mm"); font.pixelSize: 120 }
-                        Lb { visible: !Theme.state.clock24; anchors.baseline: hrs.baseline; leftPadding: 12; text: clock.date.getHours() < 12 ? "am" : "pm" }
+                        Num { text: clock.date.getHours() >= 12 ? "PM" : "AM"; font.pixelSize: 50; anchors.baseline: hrs.baseline; leftPadding: 12 }
                     }
                     Lb { x: 64; y: 172; text: Qt.locale("es_HN").toString(clock.date, "dddd · d MMMM"); px: 11 }
                     Text {
