@@ -55,7 +55,7 @@ PanelWindow {
 
     Rectangle {
         anchors.fill: parent
-        color: Theme.fade(Theme.bg, 0.85)
+        color: "transparent"
         opacity: root.t
         MouseArea { anchors.fill: parent; onClicked: root.close() }
     }
@@ -78,8 +78,8 @@ PanelWindow {
                 height: col.height + 44
                 opacity: root.t
                 radius: Theme.corner(36)
-                color: Theme.fade(Theme.s1, 0.9)
-                border { width: 1; color: Theme.s2 }
+                color: "#141E14"
+                border { width: 2; color:"#2E7D32" }
                 focus: true
                 Keys.onEscapePressed: root.close()
                 MouseArea { anchors.fill: parent } // клик по панели не закрывает

@@ -134,5 +134,6 @@ hl.layer_rule({ match = { namespace = "demonshot-.*" }, no_anim = true })
 hl.layer_rule({ match = { namespace = "glyph-power" }, animation = "fade" })
 -- glassmorphism: fondo semi-transparente + blur sobre capas flotantes
 hl.layer_rule({ match = { namespace = "glyph-bar" }, blur = true, ignore_alpha = 0.5 })
-hl.layer_rule({ match = { namespace = "glyph-(launcher|quick|prefs|power|cal|clip|charms|vpn|buds|deck)" }, blur = true, ignore_alpha = 0.4 })
+hl.layer_rule({ match = { namespace = "glyph-(launcher|prefs|power|cal|clip|charms|vpn|buds)" }, blur = true, ignore_alpha = 0.4 })
+hl.layer_rule({ match = { namespace = "glyph-quick" }, blur = false }) -- panel rápido sin desenfoque
 hl.layer_rule({ match = { namespace = "glyph-(launcher|edge|island|buds|quick|home|bar|caffeine|shot|clip|charms|vpn|deck|prefs|hot|cal|wall|back)" }, no_anim = true })
